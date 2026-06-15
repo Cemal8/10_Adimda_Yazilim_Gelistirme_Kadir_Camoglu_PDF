@@ -47,7 +47,7 @@
             label1.Size = new Size(56, 15);
             label1.TabIndex = 0;
             label1.Text = "Kullanıcı:";
-            label1.Click += this.label1_Click_1;
+            label1.Click += label1_Click_1;
             // 
             // pictureBox1
             // 
@@ -58,7 +58,7 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
-            pictureBox1.Click += this.pictureBox1_Click;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // txtKullanici
             // 
@@ -67,7 +67,7 @@
             txtKullanici.Size = new Size(100, 23);
             txtKullanici.TabIndex = 2;
             txtKullanici.Text = "abc";
-            txtKullanici.TextChanged += this.txtKullanici_TextChanged;
+            txtKullanici.TextChanged += txtKullanici_TextChanged;
             // 
             // label2
             // 
@@ -89,7 +89,7 @@
             txtParola.Size = new Size(100, 23);
             txtParola.TabIndex = 4;
             txtParola.Text = "111";
-            txtParola.TextChanged += this.txtParola_TextChanged;
+            txtParola.TextChanged += txtParola_TextChanged;
             // 
             // btnGir
             // 
@@ -99,16 +99,16 @@
             btnGir.TabIndex = 5;
             btnGir.Text = "Gir";
             btnGir.UseVisualStyleBackColor = true;
-            btnGir.Click += this.btnGir_Click;
+            btnGir.Click += btnGir_Click;
             // 
             // lblAyrac
             // 
             lblAyrac.BorderStyle = BorderStyle.Fixed3D;
             lblAyrac.Location = new Point(329, 180);
             lblAyrac.Name = "lblAyrac";
-            lblAyrac.Size = new Size(195, 23);
+            lblAyrac.Size = new Size(195, 2);
             lblAyrac.TabIndex = 6;
-            lblAyrac.Click += this.lblAyrac_Click;
+            lblAyrac.Click += lblAyrac_Click;
             // 
             // FormGiris
             // 
