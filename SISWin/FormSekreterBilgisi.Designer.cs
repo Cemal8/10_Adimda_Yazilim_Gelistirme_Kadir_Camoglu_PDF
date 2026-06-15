@@ -157,7 +157,7 @@
             // 
             // btnKaydet
             // 
-            btnKaydet.Location = new Point(395, 301);
+            btnKaydet.Location = new Point(384, 301);
             btnKaydet.Name = "btnKaydet";
             btnKaydet.Size = new Size(111, 23);
             btnKaydet.TabIndex = 13;
