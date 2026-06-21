@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             grpArama = new GroupBox();
-            IstHastalar = new ListBox();
+            lstHastalar = new ListBox();
             lnkYeniHastaGir = new LinkLabel();
             label4 = new Label();
             btnAra = new Button();
@@ -79,7 +79,7 @@
             // 
             // grpArama
             // 
-            grpArama.Controls.Add(IstHastalar);
+            grpArama.Controls.Add(lstHastalar);
             grpArama.Controls.Add(lnkYeniHastaGir);
             grpArama.Controls.Add(label4);
             grpArama.Controls.Add(btnAra);
@@ -94,16 +94,16 @@
             grpArama.TabStop = false;
             grpArama.Text = "Arama";
             // 
-            // IstHastalar
+            // lstHastalar
             // 
-            IstHastalar.FormattingEnabled = true;
-            IstHastalar.ItemHeight = 15;
-            IstHastalar.Location = new Point(12, 229);
-            IstHastalar.Name = "IstHastalar";
-            IstHastalar.ScrollAlwaysVisible = true;
-            IstHastalar.Size = new Size(243, 349);
-            IstHastalar.TabIndex = 8;
-            IstHastalar.SelectedIndexChanged += IstHastalar_SelectedIndexChanged;
+            lstHastalar.FormattingEnabled = true;
+            lstHastalar.ItemHeight = 15;
+            lstHastalar.Location = new Point(12, 229);
+            lstHastalar.Name = "lstHastalar";
+            lstHastalar.ScrollAlwaysVisible = true;
+            lstHastalar.Size = new Size(243, 349);
+            lstHastalar.TabIndex = 8;
+            lstHastalar.SelectedIndexChanged += lstHastalar_SelectedIndexChanged;
             // 
             // lnkYeniHastaGir
             // 
@@ -520,7 +520,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(802, 577);
+            ClientSize = new Size(802, 625);
             Controls.Add(grpRandevuBilgileri);
             Controls.Add(grbHastaBilgileri);
             Controls.Add(grpArama);
@@ -529,6 +529,7 @@
             Name = "FormHastaRandevuYonet";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Hasta & Randevu Yonetimi";
+            Load += FormHastaRandevuYonet_Load;
             grpArama.ResumeLayout(false);
             grpArama.PerformLayout();
             grbHastaBilgileri.ResumeLayout(false);
@@ -549,7 +550,7 @@
         private Label label2;
         private Label label1;
         private Label label4;
-        private ListBox IstHastalar;
+        private ListBox lstHastalar;
         private LinkLabel lnkYeniHastaGir;
         private Label label12;
         private Label label11;

@@ -31,32 +31,32 @@
             cbbSeanslar = new ComboBox();
             label1 = new Label();
             grbHastaBilgileri = new GroupBox();
-            grpHastaGecmisi = new GroupBox();
-            grpSeansNotu = new GroupBox();
-            label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
-            label5 = new Label();
-            label6 = new Label();
-            label7 = new Label();
-            label8 = new Label();
-            label9 = new Label();
-            label10 = new Label();
-            lblTCKimlikNo = new Label();
-            lblAd = new Label();
-            lblSoyad = new Label();
-            lblCinsiyet = new Label();
-            lblEPosta = new Label();
-            lblTelefon = new Label();
-            lblGsmNo = new Label();
+            lblAdres = new Label();
             lblDogumTarihi = new Label();
-            label11 = new Label();
-            lstSeanslar = new ListBox();
-            label12 = new Label();
-            txtGecmisSeansNotu = new TextBox();
+            lblGsmNo = new Label();
+            lblTelefon = new Label();
+            lblEPosta = new Label();
+            lblCinsiyet = new Label();
+            lblSoyad = new Label();
+            lblAd = new Label();
+            lblTCKimlikNo = new Label();
+            label10 = new Label();
+            label9 = new Label();
+            label8 = new Label();
+            label7 = new Label();
+            label6 = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            label3 = new Label();
+            label2 = new Label();
+            grpHastaGecmisi = new GroupBox();
             btnGüncelle = new Button();
-            txtAktifSeansNotu = new TextBox();
+            txtGecmisSeansNotu = new TextBox();
+            label12 = new Label();
+            lstSeanslar = new ListBox();
+            grpSeansNotu = new GroupBox();
             btnKaydet = new Button();
+            txtAktifSeansNotu = new TextBox();
             grbHastaBilgileri.SuspendLayout();
             grpHastaGecmisi.SuspendLayout();
             grpSeansNotu.SuspendLayout();
@@ -70,6 +70,7 @@
             cbbSeanslar.Name = "cbbSeanslar";
             cbbSeanslar.Size = new Size(251, 23);
             cbbSeanslar.TabIndex = 0;
+            cbbSeanslar.SelectedIndexChanged += cbbSeanslar_SelectedIndexChanged;
             // 
             // label1
             // 
@@ -82,7 +83,7 @@
             // 
             // grbHastaBilgileri
             // 
-            grbHastaBilgileri.Controls.Add(label11);
+            grbHastaBilgileri.Controls.Add(lblAdres);
             grbHastaBilgileri.Controls.Add(lblDogumTarihi);
             grbHastaBilgileri.Controls.Add(lblGsmNo);
             grbHastaBilgileri.Controls.Add(lblTelefon);
@@ -107,6 +108,161 @@
             grbHastaBilgileri.TabStop = false;
             grbHastaBilgileri.Text = "Hasta Bilgileri";
             // 
+            // lblAdres
+            // 
+            lblAdres.BorderStyle = BorderStyle.FixedSingle;
+            lblAdres.Location = new Point(100, 255);
+            lblAdres.Name = "lblAdres";
+            lblAdres.Size = new Size(219, 270);
+            lblAdres.TabIndex = 17;
+            // 
+            // lblDogumTarihi
+            // 
+            lblDogumTarihi.BorderStyle = BorderStyle.FixedSingle;
+            lblDogumTarihi.Location = new Point(100, 222);
+            lblDogumTarihi.Name = "lblDogumTarihi";
+            lblDogumTarihi.Size = new Size(219, 23);
+            lblDogumTarihi.TabIndex = 16;
+            // 
+            // lblGsmNo
+            // 
+            lblGsmNo.BorderStyle = BorderStyle.FixedSingle;
+            lblGsmNo.Location = new Point(100, 191);
+            lblGsmNo.Name = "lblGsmNo";
+            lblGsmNo.Size = new Size(219, 23);
+            lblGsmNo.TabIndex = 15;
+            // 
+            // lblTelefon
+            // 
+            lblTelefon.BorderStyle = BorderStyle.FixedSingle;
+            lblTelefon.Location = new Point(100, 166);
+            lblTelefon.Name = "lblTelefon";
+            lblTelefon.Size = new Size(219, 23);
+            lblTelefon.TabIndex = 14;
+            // 
+            // lblEPosta
+            // 
+            lblEPosta.BorderStyle = BorderStyle.FixedSingle;
+            lblEPosta.Location = new Point(100, 139);
+            lblEPosta.Name = "lblEPosta";
+            lblEPosta.Size = new Size(219, 23);
+            lblEPosta.TabIndex = 13;
+            // 
+            // lblCinsiyet
+            // 
+            lblCinsiyet.BorderStyle = BorderStyle.FixedSingle;
+            lblCinsiyet.Location = new Point(100, 113);
+            lblCinsiyet.Name = "lblCinsiyet";
+            lblCinsiyet.Size = new Size(219, 23);
+            lblCinsiyet.TabIndex = 12;
+            // 
+            // lblSoyad
+            // 
+            lblSoyad.BorderStyle = BorderStyle.FixedSingle;
+            lblSoyad.Location = new Point(100, 89);
+            lblSoyad.Name = "lblSoyad";
+            lblSoyad.Size = new Size(219, 23);
+            lblSoyad.TabIndex = 11;
+            // 
+            // lblAd
+            // 
+            lblAd.BorderStyle = BorderStyle.FixedSingle;
+            lblAd.Location = new Point(100, 64);
+            lblAd.Name = "lblAd";
+            lblAd.Size = new Size(219, 23);
+            lblAd.TabIndex = 10;
+            // 
+            // lblTCKimlikNo
+            // 
+            lblTCKimlikNo.BorderStyle = BorderStyle.FixedSingle;
+            lblTCKimlikNo.Location = new Point(100, 40);
+            lblTCKimlikNo.Name = "lblTCKimlikNo";
+            lblTCKimlikNo.Size = new Size(219, 23);
+            lblTCKimlikNo.TabIndex = 9;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(12, 255);
+            label10.Name = "label10";
+            label10.Size = new Size(40, 15);
+            label10.TabIndex = 8;
+            label10.Text = "Adres:";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(12, 230);
+            label9.Name = "label9";
+            label9.Size = new Size(82, 15);
+            label9.TabIndex = 7;
+            label9.Text = "Doğum Tarihi:";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(12, 199);
+            label8.Name = "label8";
+            label8.Size = new Size(54, 15);
+            label8.TabIndex = 6;
+            label8.Text = "GSM No:";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(12, 167);
+            label7.Name = "label7";
+            label7.Size = new Size(49, 15);
+            label7.TabIndex = 5;
+            label7.Text = "Telefon:";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(12, 139);
+            label6.Name = "label6";
+            label6.Size = new Size(50, 15);
+            label6.TabIndex = 4;
+            label6.Text = "E-Posta:";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(12, 113);
+            label5.Name = "label5";
+            label5.RightToLeft = RightToLeft.No;
+            label5.Size = new Size(52, 15);
+            label5.TabIndex = 3;
+            label5.Text = "Cinsiyet:";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 89);
+            label4.Name = "label4";
+            label4.Size = new Size(45, 15);
+            label4.TabIndex = 2;
+            label4.Text = "Soyadı:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(12, 64);
+            label3.Name = "label3";
+            label3.RightToLeft = RightToLeft.No;
+            label3.Size = new Size(28, 15);
+            label3.TabIndex = 1;
+            label3.Text = "Adı:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 40);
+            label2.Name = "label2";
+            label2.Size = new Size(79, 15);
+            label2.TabIndex = 0;
+            label2.Text = "TC Kimlik No:";
+            // 
             // grpHastaGecmisi
             // 
             grpHastaGecmisi.Controls.Add(btnGüncelle);
@@ -120,171 +276,34 @@
             grpHastaGecmisi.TabStop = false;
             grpHastaGecmisi.Text = "Hasta Geçmişi";
             // 
-            // grpSeansNotu
+            // btnGüncelle
             // 
-            grpSeansNotu.Controls.Add(btnKaydet);
-            grpSeansNotu.Controls.Add(txtAktifSeansNotu);
-            grpSeansNotu.Location = new Point(722, 54);
-            grpSeansNotu.Name = "grpSeansNotu";
-            grpSeansNotu.Size = new Size(325, 624);
-            grpSeansNotu.TabIndex = 4;
-            grpSeansNotu.TabStop = false;
-            grpSeansNotu.Text = "Seans Notu";
+            btnGüncelle.Location = new Point(237, 543);
+            btnGüncelle.Name = "btnGüncelle";
+            btnGüncelle.Size = new Size(82, 32);
+            btnGüncelle.TabIndex = 8;
+            btnGüncelle.Text = "Güncelle";
+            btnGüncelle.UseVisualStyleBackColor = true;
+            btnGüncelle.Click += btnGüncelle_Click;
             // 
-            // label2
+            // txtGecmisSeansNotu
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 40);
-            label2.Name = "label2";
-            label2.Size = new Size(79, 15);
-            label2.TabIndex = 0;
-            label2.Text = "TC Kimlik No:";
+            txtGecmisSeansNotu.Location = new Point(6, 48);
+            txtGecmisSeansNotu.Multiline = true;
+            txtGecmisSeansNotu.Name = "txtGecmisSeansNotu";
+            txtGecmisSeansNotu.ScrollBars = ScrollBars.Vertical;
+            txtGecmisSeansNotu.Size = new Size(313, 134);
+            txtGecmisSeansNotu.TabIndex = 7;
+            txtGecmisSeansNotu.TextChanged += txtGecmisSeansNotu_TextChanged;
             // 
-            // label3
+            // label12
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(12, 64);
-            label3.Name = "label3";
-            label3.RightToLeft = RightToLeft.No;
-            label3.Size = new Size(28, 15);
-            label3.TabIndex = 1;
-            label3.Text = "Adı:";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(12, 89);
-            label4.Name = "label4";
-            label4.Size = new Size(45, 15);
-            label4.TabIndex = 2;
-            label4.Text = "Soyadı:";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(12, 113);
-            label5.Name = "label5";
-            label5.RightToLeft = RightToLeft.No;
-            label5.Size = new Size(52, 15);
-            label5.TabIndex = 3;
-            label5.Text = "Cinsiyet:";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(12, 139);
-            label6.Name = "label6";
-            label6.Size = new Size(50, 15);
-            label6.TabIndex = 4;
-            label6.Text = "E-Posta:";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(12, 167);
-            label7.Name = "label7";
-            label7.Size = new Size(49, 15);
-            label7.TabIndex = 5;
-            label7.Text = "Telefon:";
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(12, 199);
-            label8.Name = "label8";
-            label8.Size = new Size(54, 15);
-            label8.TabIndex = 6;
-            label8.Text = "GSM No:";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(12, 230);
-            label9.Name = "label9";
-            label9.Size = new Size(82, 15);
-            label9.TabIndex = 7;
-            label9.Text = "Doğum Tarihi:";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(12, 255);
-            label10.Name = "label10";
-            label10.Size = new Size(40, 15);
-            label10.TabIndex = 8;
-            label10.Text = "Adres:";
-            // 
-            // lblTCKimlikNo
-            // 
-            lblTCKimlikNo.BorderStyle = BorderStyle.FixedSingle;
-            lblTCKimlikNo.Location = new Point(100, 40);
-            lblTCKimlikNo.Name = "lblTCKimlikNo";
-            lblTCKimlikNo.Size = new Size(219, 23);
-            lblTCKimlikNo.TabIndex = 9;
-            // 
-            // lblAd
-            // 
-            lblAd.BorderStyle = BorderStyle.FixedSingle;
-            lblAd.Location = new Point(100, 64);
-            lblAd.Name = "lblAd";
-            lblAd.Size = new Size(219, 23);
-            lblAd.TabIndex = 10;
-            // 
-            // lblSoyad
-            // 
-            lblSoyad.BorderStyle = BorderStyle.FixedSingle;
-            lblSoyad.Location = new Point(100, 89);
-            lblSoyad.Name = "lblSoyad";
-            lblSoyad.Size = new Size(219, 23);
-            lblSoyad.TabIndex = 11;
-            // 
-            // lblCinsiyet
-            // 
-            lblCinsiyet.BorderStyle = BorderStyle.FixedSingle;
-            lblCinsiyet.Location = new Point(100, 113);
-            lblCinsiyet.Name = "lblCinsiyet";
-            lblCinsiyet.Size = new Size(219, 23);
-            lblCinsiyet.TabIndex = 12;
-            // 
-            // lblEPosta
-            // 
-            lblEPosta.BorderStyle = BorderStyle.FixedSingle;
-            lblEPosta.Location = new Point(100, 139);
-            lblEPosta.Name = "lblEPosta";
-            lblEPosta.Size = new Size(219, 23);
-            lblEPosta.TabIndex = 13;
-            // 
-            // lblTelefon
-            // 
-            lblTelefon.BorderStyle = BorderStyle.FixedSingle;
-            lblTelefon.Location = new Point(100, 166);
-            lblTelefon.Name = "lblTelefon";
-            lblTelefon.Size = new Size(219, 23);
-            lblTelefon.TabIndex = 14;
-            // 
-            // lblGsmNo
-            // 
-            lblGsmNo.BorderStyle = BorderStyle.FixedSingle;
-            lblGsmNo.Location = new Point(100, 191);
-            lblGsmNo.Name = "lblGsmNo";
-            lblGsmNo.Size = new Size(219, 23);
-            lblGsmNo.TabIndex = 15;
-            // 
-            // lblDogumTarihi
-            // 
-            lblDogumTarihi.BorderStyle = BorderStyle.FixedSingle;
-            lblDogumTarihi.Location = new Point(100, 222);
-            lblDogumTarihi.Name = "lblDogumTarihi";
-            lblDogumTarihi.Size = new Size(219, 23);
-            lblDogumTarihi.TabIndex = 16;
-            // 
-            // label11
-            // 
-            label11.BorderStyle = BorderStyle.FixedSingle;
-            label11.Location = new Point(100, 255);
-            label11.Name = "label11";
-            label11.Size = new Size(219, 270);
-            label11.TabIndex = 17;
+            label12.AutoSize = true;
+            label12.Location = new Point(6, 30);
+            label12.Name = "label12";
+            label12.Size = new Size(50, 15);
+            label12.TabIndex = 6;
+            label12.Text = "Seanslar";
             // 
             // lstSeanslar
             // 
@@ -296,41 +315,16 @@
             lstSeanslar.Size = new Size(313, 334);
             lstSeanslar.TabIndex = 5;
             // 
-            // label12
+            // grpSeansNotu
             // 
-            label12.AutoSize = true;
-            label12.Location = new Point(6, 30);
-            label12.Name = "label12";
-            label12.Size = new Size(50, 15);
-            label12.TabIndex = 6;
-            label12.Text = "Seanslar";
-            // 
-            // txtGecmisSeansNotu
-            // 
-            txtGecmisSeansNotu.Location = new Point(6, 48);
-            txtGecmisSeansNotu.Multiline = true;
-            txtGecmisSeansNotu.Name = "txtGecmisSeansNotu";
-            txtGecmisSeansNotu.ScrollBars = ScrollBars.Vertical;
-            txtGecmisSeansNotu.Size = new Size(313, 134);
-            txtGecmisSeansNotu.TabIndex = 7;
-            // 
-            // btnGüncelle
-            // 
-            btnGüncelle.Location = new Point(237, 543);
-            btnGüncelle.Name = "btnGüncelle";
-            btnGüncelle.Size = new Size(82, 32);
-            btnGüncelle.TabIndex = 8;
-            btnGüncelle.Text = "Güncelle";
-            btnGüncelle.UseVisualStyleBackColor = true;
-            // 
-            // txtAktifSeansNotu
-            // 
-            txtAktifSeansNotu.Location = new Point(6, 32);
-            txtAktifSeansNotu.Multiline = true;
-            txtAktifSeansNotu.Name = "txtAktifSeansNotu";
-            txtAktifSeansNotu.ScrollBars = ScrollBars.Vertical;
-            txtAktifSeansNotu.Size = new Size(313, 493);
-            txtAktifSeansNotu.TabIndex = 9;
+            grpSeansNotu.Controls.Add(btnKaydet);
+            grpSeansNotu.Controls.Add(txtAktifSeansNotu);
+            grpSeansNotu.Location = new Point(722, 54);
+            grpSeansNotu.Name = "grpSeansNotu";
+            grpSeansNotu.Size = new Size(325, 624);
+            grpSeansNotu.TabIndex = 4;
+            grpSeansNotu.TabStop = false;
+            grpSeansNotu.Text = "Seans Notu";
             // 
             // btnKaydet
             // 
@@ -340,6 +334,16 @@
             btnKaydet.TabIndex = 10;
             btnKaydet.Text = "Kaydet";
             btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Click += btnKaydet_Click;
+            // 
+            // txtAktifSeansNotu
+            // 
+            txtAktifSeansNotu.Location = new Point(6, 32);
+            txtAktifSeansNotu.Multiline = true;
+            txtAktifSeansNotu.Name = "txtAktifSeansNotu";
+            txtAktifSeansNotu.ScrollBars = ScrollBars.Vertical;
+            txtAktifSeansNotu.Size = new Size(313, 493);
+            txtAktifSeansNotu.TabIndex = 9;
             // 
             // FormUzmanSeansYonetimi
             // 
@@ -356,6 +360,7 @@
             Name = "FormUzmanSeansYonetimi";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Uzman Seans Yönetimi";
+            Load += FormUzmanSeansYonetimi_Load;
             grbHastaBilgileri.ResumeLayout(false);
             grbHastaBilgileri.PerformLayout();
             grpHastaGecmisi.ResumeLayout(false);
@@ -382,7 +387,7 @@
         private Label label4;
         private Label label3;
         private Label label2;
-        private Label label11;
+        private Label lblAdres;
         private Label lblDogumTarihi;
         private Label lblGsmNo;
         private Label lblTelefon;

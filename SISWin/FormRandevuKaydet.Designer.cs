@@ -36,7 +36,7 @@
             btnKaydet = new Button();
             cbbUzmanlar = new ComboBox();
             cbbSeanslar = new ComboBox();
-            textBox1 = new TextBox();
+            lblHasta = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -92,6 +92,7 @@
             btnKaydet.TabIndex = 11;
             btnKaydet.Text = "Kaydet";
             btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Click += btnKaydet_Click;
             // 
             // cbbUzmanlar
             // 
@@ -101,6 +102,7 @@
             cbbUzmanlar.Name = "cbbUzmanlar";
             cbbUzmanlar.Size = new Size(186, 23);
             cbbUzmanlar.TabIndex = 12;
+            cbbUzmanlar.SelectedIndexChanged += cbbUzmanlar_SelectedIndexChanged;
             // 
             // cbbSeanslar
             // 
@@ -110,20 +112,21 @@
             cbbSeanslar.Name = "cbbSeanslar";
             cbbSeanslar.Size = new Size(186, 23);
             cbbSeanslar.TabIndex = 13;
+            cbbSeanslar.SelectedIndexChanged += cbbSeanslar_SelectedIndexChanged;
             // 
-            // textBox1
+            // lblHasta
             // 
-            textBox1.Location = new Point(401, 99);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(186, 23);
-            textBox1.TabIndex = 14;
+            lblHasta.Location = new Point(401, 99);
+            lblHasta.Name = "lblHasta";
+            lblHasta.Size = new Size(186, 23);
+            lblHasta.TabIndex = 14;
             // 
             // FormRandevuKaydet
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(textBox1);
+            Controls.Add(lblHasta);
             Controls.Add(cbbSeanslar);
             Controls.Add(cbbUzmanlar);
             Controls.Add(btnKaydet);
@@ -137,6 +140,7 @@
             Name = "FormRandevuKaydet";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Randevu Kaydet";
+            Load += FormRandevuKaydet_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -152,6 +156,6 @@
         private Button btnKaydet;
         private ComboBox cbbUzmanlar;
         private ComboBox cbbSeanslar;
-        private TextBox textBox1;
+        private TextBox lblHasta;
     }
 }
