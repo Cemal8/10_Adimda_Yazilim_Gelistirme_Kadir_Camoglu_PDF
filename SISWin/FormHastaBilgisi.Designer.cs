@@ -57,7 +57,7 @@
             lblAyrac.BorderStyle = BorderStyle.Fixed3D;
             lblAyrac.Location = new Point(342, 397);
             lblAyrac.Name = "lblAyrac";
-            lblAyrac.Size = new Size(368, 10);
+            lblAyrac.Size = new Size(368, 1);
             lblAyrac.TabIndex = 29;
             // 
             // btnKaydet
@@ -68,10 +68,12 @@
             btnKaydet.TabIndex = 28;
             btnKaydet.Text = "Kaydet";
             btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Click += btnKaydet_Click;
             // 
             // txtGsmNo
             // 
             txtGsmNo.Location = new Point(436, 312);
+            txtGsmNo.MaxLength = 13;
             txtGsmNo.Name = "txtGsmNo";
             txtGsmNo.Size = new Size(100, 23);
             txtGsmNo.TabIndex = 27;
@@ -79,6 +81,7 @@
             // txtTelefon
             // 
             txtTelefon.Location = new Point(436, 283);
+            txtTelefon.MaxLength = 13;
             txtTelefon.Name = "txtTelefon";
             txtTelefon.Size = new Size(100, 23);
             txtTelefon.TabIndex = 26;
@@ -86,6 +89,7 @@
             // txtEPosta
             // 
             txtEPosta.Location = new Point(436, 254);
+            txtEPosta.MaxLength = 50;
             txtEPosta.Name = "txtEPosta";
             txtEPosta.Size = new Size(100, 23);
             txtEPosta.TabIndex = 25;
@@ -93,6 +97,7 @@
             // txtSoyad
             // 
             txtSoyad.Location = new Point(436, 166);
+            txtSoyad.MaxLength = 50;
             txtSoyad.Name = "txtSoyad";
             txtSoyad.Size = new Size(100, 23);
             txtSoyad.TabIndex = 24;
@@ -100,6 +105,7 @@
             // txtAd
             // 
             txtAd.Location = new Point(436, 138);
+            txtAd.MaxLength = 50;
             txtAd.Name = "txtAd";
             txtAd.Size = new Size(100, 23);
             txtAd.TabIndex = 23;
@@ -107,6 +113,7 @@
             // txtKimlikNo
             // 
             txtKimlikNo.Location = new Point(436, 109);
+            txtKimlikNo.MaxLength = 11;
             txtKimlikNo.Name = "txtKimlikNo";
             txtKimlikNo.Size = new Size(100, 23);
             txtKimlikNo.TabIndex = 22;
@@ -216,6 +223,7 @@
             // txtAdres
             // 
             txtAdres.Location = new Point(436, 341);
+            txtAdres.MaxLength = 350;
             txtAdres.Multiline = true;
             txtAdres.Name = "txtAdres";
             txtAdres.Size = new Size(100, 23);
@@ -259,6 +267,7 @@
             Controls.Add(pictureBox1);
             Name = "FormHastaBilgisi";
             Text = "Hasta Bilgisi";
+            Load += FormHastaBilgisi_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

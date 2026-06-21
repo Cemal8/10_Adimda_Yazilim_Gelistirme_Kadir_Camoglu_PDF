@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             ManinMenu = new MenuStrip();
             menüToolStripMenuItem = new ToolStripMenuItem();
             mniParolaDegistir = new ToolStripMenuItem();
@@ -38,12 +39,13 @@
             mniRandevuYonet = new ToolStripMenuItem();
             mniSeansYonetSekreter = new ToolStripMenuItem();
             mniSeansYonetUzman = new ToolStripMenuItem();
+            mniAyrac = new ToolStripMenuItem();
             mniCikis = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             tslKullanici = new ToolStripStatusLabel();
             tslTarih = new ToolStripStatusLabel();
             tslSaat = new ToolStripStatusLabel();
-            mniAyrac = new ToolStripMenuItem();
+            tmrSaat = new System.Windows.Forms.Timer(components);
             ManinMenu.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -63,59 +65,66 @@
             menüToolStripMenuItem.Name = "menüToolStripMenuItem";
             menüToolStripMenuItem.Size = new Size(50, 20);
             menüToolStripMenuItem.Text = "&Menü";
+            menüToolStripMenuItem.Click += menüToolStripMenuItem_Click;
             // 
             // mniParolaDegistir
             // 
             mniParolaDegistir.Name = "mniParolaDegistir";
-            mniParolaDegistir.Size = new Size(155, 22);
+            mniParolaDegistir.Size = new Size(180, 22);
             mniParolaDegistir.Text = "Parola &Değiştir";
             // 
             // mniParolaSifirla
             // 
             mniParolaSifirla.Name = "mniParolaSifirla";
-            mniParolaSifirla.Size = new Size(155, 22);
+            mniParolaSifirla.Size = new Size(180, 22);
             mniParolaSifirla.Text = "Parola Sıfırla";
             // 
             // mniUzmanKaydet
             // 
             mniUzmanKaydet.Name = "mniUzmanKaydet";
-            mniUzmanKaydet.Size = new Size(155, 22);
+            mniUzmanKaydet.Size = new Size(180, 22);
             mniUzmanKaydet.Text = "&Uzman Kaydet";
             // 
             // mniSekreterKaydet
             // 
             mniSekreterKaydet.Name = "mniSekreterKaydet";
-            mniSekreterKaydet.Size = new Size(155, 22);
+            mniSekreterKaydet.Size = new Size(180, 22);
             mniSekreterKaydet.Text = "&Sekreter Kaydet";
             // 
             // mniCalisanAra
             // 
             mniCalisanAra.Name = "mniCalisanAra";
-            mniCalisanAra.Size = new Size(155, 22);
+            mniCalisanAra.Size = new Size(180, 22);
             mniCalisanAra.Text = "Çalışan &Ara";
             // 
             // mniRandevuYonet
             // 
             mniRandevuYonet.Name = "mniRandevuYonet";
-            mniRandevuYonet.Size = new Size(155, 22);
+            mniRandevuYonet.Size = new Size(180, 22);
             mniRandevuYonet.Text = "&Randevu Yönet";
             // 
             // mniSeansYonetSekreter
             // 
             mniSeansYonetSekreter.Name = "mniSeansYonetSekreter";
-            mniSeansYonetSekreter.Size = new Size(155, 22);
+            mniSeansYonetSekreter.Size = new Size(180, 22);
             mniSeansYonetSekreter.Text = "&Seans Yönet";
             // 
             // mniSeansYonetUzman
             // 
             mniSeansYonetUzman.Name = "mniSeansYonetUzman";
-            mniSeansYonetUzman.Size = new Size(155, 22);
+            mniSeansYonetUzman.Size = new Size(180, 22);
             mniSeansYonetUzman.Text = "&Seans Yönet";
+            // 
+            // mniAyrac
+            // 
+            mniAyrac.Name = "mniAyrac";
+            mniAyrac.Size = new Size(180, 22);
+            mniAyrac.Text = "-";
             // 
             // mniCikis
             // 
             mniCikis.Name = "mniCikis";
-            mniCikis.Size = new Size(155, 22);
+            mniCikis.Size = new Size(180, 22);
             mniCikis.Text = "&Çıkış";
             // 
             // statusStrip1
@@ -146,11 +155,9 @@
             tslSaat.Size = new Size(34, 17);
             tslSaat.Text = "11:57";
             // 
-            // mniAyrac
+            // tmrSaat
             // 
-            mniAyrac.Name = "mniAyrac";
-            mniAyrac.Size = new Size(155, 22);
-            mniAyrac.Text = "-";
+            tmrSaat.Enabled = true;
             // 
             // FormAnaSayfa
             // 
@@ -188,5 +195,6 @@
         private ToolStripStatusLabel tslTarih;
         private ToolStripStatusLabel tslSaat;
         private ToolStripMenuItem mniAyrac;
+        private System.Windows.Forms.Timer tmrSaat;
     }
 }

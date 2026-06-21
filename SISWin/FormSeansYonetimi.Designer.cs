@@ -30,12 +30,12 @@
         {
             pictureBox1 = new PictureBox();
             cbbUzmanlar = new ComboBox();
-            listBox1 = new ListBox();
+            lstSeanslar = new ListBox();
             lblAyrac = new Label();
             label1 = new Label();
             label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
+            lnkSeansIptalEt = new LinkLabel();
+            lnkSeansEkle = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -56,16 +56,17 @@
             cbbUzmanlar.Name = "cbbUzmanlar";
             cbbUzmanlar.Size = new Size(121, 23);
             cbbUzmanlar.TabIndex = 1;
+            cbbUzmanlar.SelectedIndexChanged += cbbUzmanlar_SelectedIndexChanged;
             // 
-            // listBox1
+            // lstSeanslar
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(292, 109);
-            listBox1.Name = "listBox1";
-            listBox1.ScrollAlwaysVisible = true;
-            listBox1.Size = new Size(404, 199);
-            listBox1.TabIndex = 2;
+            lstSeanslar.FormattingEnabled = true;
+            lstSeanslar.ItemHeight = 15;
+            lstSeanslar.Location = new Point(292, 109);
+            lstSeanslar.Name = "lstSeanslar";
+            lstSeanslar.ScrollAlwaysVisible = true;
+            lstSeanslar.Size = new Size(404, 199);
+            lstSeanslar.TabIndex = 2;
             // 
             // lblAyrac
             // 
@@ -93,37 +94,41 @@
             label2.TabIndex = 32;
             label2.Text = "Seanslar";
             // 
-            // label3
+            // lnkSeansIptalEt
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(610, 91);
-            label3.Name = "label3";
-            label3.RightToLeft = RightToLeft.No;
-            label3.Size = new Size(86, 15);
-            label3.TabIndex = 33;
-            label3.Text = "Yeni Seans Ekle";
+            lnkSeansIptalEt.AutoSize = true;
+            lnkSeansIptalEt.LinkColor = Color.Black;
+            lnkSeansIptalEt.Location = new Point(587, 318);
+            lnkSeansIptalEt.Name = "lnkSeansIptalEt";
+            lnkSeansIptalEt.Size = new Size(109, 15);
+            lnkSeansIptalEt.TabIndex = 35;
+            lnkSeansIptalEt.TabStop = true;
+            lnkSeansIptalEt.Text = "Seçili Seansı İptal Et";
+            lnkSeansIptalEt.LinkClicked += lnkSeansIptalEt_LinkClicked;
             // 
-            // label4
+            // lnkSeansEkle
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(610, 318);
-            label4.Name = "label4";
-            label4.RightToLeft = RightToLeft.No;
-            label4.Size = new Size(109, 15);
-            label4.TabIndex = 34;
-            label4.Text = "Seçili Seansı İptal Et";
+            lnkSeansEkle.AutoSize = true;
+            lnkSeansEkle.LinkColor = Color.Black;
+            lnkSeansEkle.Location = new Point(610, 91);
+            lnkSeansEkle.Name = "lnkSeansEkle";
+            lnkSeansEkle.Size = new Size(86, 15);
+            lnkSeansEkle.TabIndex = 36;
+            lnkSeansEkle.TabStop = true;
+            lnkSeansEkle.Text = "Yeni Seans Ekle";
+            lnkSeansEkle.LinkClicked += lnkSeansEkle_LinkClicked;
             // 
             // FormSeansYonetimi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(label4);
-            Controls.Add(label3);
+            Controls.Add(lnkSeansEkle);
+            Controls.Add(lnkSeansIptalEt);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(lblAyrac);
-            Controls.Add(listBox1);
+            Controls.Add(lstSeanslar);
             Controls.Add(cbbUzmanlar);
             Controls.Add(pictureBox1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -131,6 +136,7 @@
             Name = "FormSeansYonetimi";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Seans Yonetimi";
+            Load += FormSeansYonetimi_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -140,11 +146,11 @@
 
         private PictureBox pictureBox1;
         private ComboBox cbbUzmanlar;
-        private ListBox listBox1;
+        private ListBox lstSeanslar;
         private Label lblAyrac;
         private Label label1;
         private Label label2;
-        private Label label3;
-        private Label label4;
+        private LinkLabel lnkSeansIptalEt;
+        private LinkLabel lnkSeansEkle;
     }
 }

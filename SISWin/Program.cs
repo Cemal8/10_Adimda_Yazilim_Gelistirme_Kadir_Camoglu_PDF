@@ -2,6 +2,8 @@ namespace SISWin
 {
     internal static class Program
     {
+        public static int KullaniciNo { get; internal set; }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

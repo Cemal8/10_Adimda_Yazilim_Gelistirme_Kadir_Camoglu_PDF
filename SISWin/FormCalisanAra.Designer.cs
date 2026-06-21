@@ -70,6 +70,7 @@
             // txtAd
             // 
             txtAd.Location = new Point(472, 105);
+            txtAd.MaxLength = 50;
             txtAd.Name = "txtAd";
             txtAd.Size = new Size(100, 23);
             txtAd.TabIndex = 24;
@@ -77,6 +78,7 @@
             // txtSoyad
             // 
             txtSoyad.Location = new Point(472, 136);
+            txtSoyad.MaxLength = 50;
             txtSoyad.Name = "txtSoyad";
             txtSoyad.Size = new Size(100, 23);
             txtSoyad.TabIndex = 23;
@@ -109,6 +111,7 @@
             lstCalisanlar.ScrollAlwaysVisible = true;
             lstCalisanlar.Size = new Size(203, 124);
             lstCalisanlar.TabIndex = 31;
+            lstCalisanlar.DoubleClick += lstCalisanlar_DoubleClick;
             // 
             // label3
             // 

@@ -54,10 +54,12 @@
             btnSifirla.TabIndex = 47;
             btnSifirla.Text = "Sıfırla";
             btnSifirla.UseVisualStyleBackColor = true;
+            btnSifirla.Click += btnSifirla_Click;
             // 
             // txtEPosta
             // 
             txtEPosta.Location = new Point(389, 105);
+            txtEPosta.MaxLength = 100;
             txtEPosta.Name = "txtEPosta";
             txtEPosta.Size = new Size(100, 23);
             txtEPosta.TabIndex = 46;
@@ -65,6 +67,7 @@
             // txtParola
             // 
             txtParola.Location = new Point(389, 136);
+            txtParola.MaxLength = 10;
             txtParola.Name = "txtParola";
             txtParola.PasswordChar = '*';
             txtParola.Size = new Size(100, 23);

@@ -62,10 +62,12 @@
             btnKaydet.TabIndex = 28;
             btnKaydet.Text = "Kaydet";
             btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Click += btnKaydet_Click;
             // 
             // txtGsmNo
             // 
             txtGsmNo.Location = new Point(501, 255);
+            txtGsmNo.MaxLength = 50;
             txtGsmNo.Name = "txtGsmNo";
             txtGsmNo.Size = new Size(100, 23);
             txtGsmNo.TabIndex = 27;
@@ -73,6 +75,7 @@
             // txtTelefon
             // 
             txtTelefon.Location = new Point(501, 226);
+            txtTelefon.MaxLength = 50;
             txtTelefon.Name = "txtTelefon";
             txtTelefon.Size = new Size(100, 23);
             txtTelefon.TabIndex = 26;
@@ -80,6 +83,7 @@
             // txtEPosta
             // 
             txtEPosta.Location = new Point(501, 197);
+            txtEPosta.MaxLength = 100;
             txtEPosta.Name = "txtEPosta";
             txtEPosta.Size = new Size(100, 23);
             txtEPosta.TabIndex = 25;
@@ -87,6 +91,7 @@
             // txtSoyad
             // 
             txtSoyad.Location = new Point(501, 169);
+            txtSoyad.MaxLength = 50;
             txtSoyad.Name = "txtSoyad";
             txtSoyad.Size = new Size(100, 23);
             txtSoyad.TabIndex = 24;
@@ -94,6 +99,7 @@
             // txtAd
             // 
             txtAd.Location = new Point(501, 141);
+            txtAd.MaxLength = 50;
             txtAd.Name = "txtAd";
             txtAd.Size = new Size(100, 23);
             txtAd.TabIndex = 23;
@@ -101,6 +107,7 @@
             // txtKimlikNo
             // 
             txtKimlikNo.Location = new Point(501, 112);
+            txtKimlikNo.MaxLength = 11;
             txtKimlikNo.Name = "txtKimlikNo";
             txtKimlikNo.Size = new Size(100, 23);
             txtKimlikNo.TabIndex = 22;
@@ -194,6 +201,7 @@
             Controls.Add(pictureBox1);
             Name = "FormUzmanBilgisi";
             Text = "Uzman";
+            Load += FormUzmanBilgisi_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

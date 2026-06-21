@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System;
+using ISK = SISIsKatmani;
+using VAR = SISVarliklar;
 namespace SISWin
 {
     public partial class FormUzmanSeansYonetimi : Form

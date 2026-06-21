@@ -56,10 +56,12 @@
             btnDegistir.TabIndex = 38;
             btnDegistir.Text = "Değiştir";
             btnDegistir.UseVisualStyleBackColor = true;
+            btnDegistir.Click += btnDegistir_Click;
             // 
             // txtEski
             // 
             txtEski.Location = new Point(408, 73);
+            txtEski.MaxLength = 10;
             txtEski.Name = "txtEski";
             txtEski.PasswordChar = '*';
             txtEski.Size = new Size(100, 23);
@@ -68,6 +70,7 @@
             // txtYeni
             // 
             txtYeni.Location = new Point(408, 104);
+            txtYeni.MaxLength = 10;
             txtYeni.Name = "txtYeni";
             txtYeni.PasswordChar = '*';
             txtYeni.Size = new Size(100, 23);
@@ -105,6 +108,7 @@
             // txtYeni2
             // 
             txtYeni2.Location = new Point(408, 135);
+            txtYeni2.MaxLength = 10;
             txtYeni2.Name = "txtYeni2";
             txtYeni2.PasswordChar = '*';
             txtYeni2.Size = new Size(100, 23);

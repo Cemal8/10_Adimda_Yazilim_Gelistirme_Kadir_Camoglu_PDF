@@ -33,8 +33,8 @@
             pictureBox1 = new PictureBox();
             label1 = new Label();
             label2 = new Label();
-            txto = new TextBox();
-            textBox2 = new TextBox();
+            lblUzman = new TextBox();
+            lblSeans = new TextBox();
             txtIptalNedeni = new TextBox();
             label3 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -85,19 +85,19 @@
             label2.TabIndex = 34;
             label2.Text = "Seans:";
             // 
-            // txto
+            // lblUzman
             // 
-            txto.Location = new Point(448, 69);
-            txto.Name = "txto";
-            txto.Size = new Size(268, 23);
-            txto.TabIndex = 35;
+            lblUzman.Location = new Point(448, 69);
+            lblUzman.Name = "lblUzman";
+            lblUzman.Size = new Size(268, 23);
+            lblUzman.TabIndex = 35;
             // 
-            // textBox2
+            // lblSeans
             // 
-            textBox2.Location = new Point(448, 141);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(268, 23);
-            textBox2.TabIndex = 36;
+            lblSeans.Location = new Point(448, 141);
+            lblSeans.Name = "lblSeans";
+            lblSeans.Size = new Size(268, 23);
+            lblSeans.TabIndex = 36;
             // 
             // txtIptalNedeni
             // 
@@ -123,8 +123,8 @@
             ClientSize = new Size(800, 450);
             Controls.Add(txtIptalNedeni);
             Controls.Add(label3);
-            Controls.Add(textBox2);
-            Controls.Add(txto);
+            Controls.Add(lblSeans);
+            Controls.Add(lblUzman);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(lblAyrac);
@@ -135,6 +135,7 @@
             Name = "FormSeansIptalEt";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Seans İptal Et";
+            Load += FormSeansIptalEt_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -147,8 +148,8 @@
         private PictureBox pictureBox1;
         private Label label1;
         private Label label2;
-        private TextBox txto;
-        private TextBox textBox2;
+        private TextBox lblUzman;
+        private TextBox lblSeans;
         private TextBox txtIptalNedeni;
         private Label label3;
     }

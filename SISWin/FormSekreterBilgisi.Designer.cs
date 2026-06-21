@@ -116,6 +116,7 @@
             // txtKimlikNo
             // 
             txtKimlikNo.Location = new Point(395, 90);
+            txtKimlikNo.MaxLength = 11;
             txtKimlikNo.Name = "txtKimlikNo";
             txtKimlikNo.Size = new Size(100, 23);
             txtKimlikNo.TabIndex = 7;
@@ -123,6 +124,7 @@
             // txtAd
             // 
             txtAd.Location = new Point(395, 119);
+            txtAd.MaxLength = 50;
             txtAd.Name = "txtAd";
             txtAd.Size = new Size(100, 23);
             txtAd.TabIndex = 8;
@@ -130,6 +132,7 @@
             // txtSoyad
             // 
             txtSoyad.Location = new Point(395, 147);
+            txtSoyad.MaxLength = 50;
             txtSoyad.Name = "txtSoyad";
             txtSoyad.Size = new Size(100, 23);
             txtSoyad.TabIndex = 9;
@@ -137,6 +140,7 @@
             // txtEPosta
             // 
             txtEPosta.Location = new Point(395, 175);
+            txtEPosta.MaxLength = 100;
             txtEPosta.Name = "txtEPosta";
             txtEPosta.Size = new Size(100, 23);
             txtEPosta.TabIndex = 10;
@@ -144,6 +148,7 @@
             // txtTelefon
             // 
             txtTelefon.Location = new Point(395, 204);
+            txtTelefon.MaxLength = 50;
             txtTelefon.Name = "txtTelefon";
             txtTelefon.Size = new Size(100, 23);
             txtTelefon.TabIndex = 11;
@@ -151,6 +156,7 @@
             // txtGsmNo
             // 
             txtGsmNo.Location = new Point(395, 233);
+            txtGsmNo.MaxLength = 50;
             txtGsmNo.Name = "txtGsmNo";
             txtGsmNo.Size = new Size(100, 23);
             txtGsmNo.TabIndex = 12;
@@ -163,6 +169,7 @@
             btnKaydet.TabIndex = 13;
             btnKaydet.Text = "Kaydet";
             btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Click += btnKaydet_Click;
             // 
             // lblAyrac
             // 
@@ -197,6 +204,7 @@
             Name = "FormSekreterBilgisi";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sekreter";
+            Load += FormSekreterBilgisi_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

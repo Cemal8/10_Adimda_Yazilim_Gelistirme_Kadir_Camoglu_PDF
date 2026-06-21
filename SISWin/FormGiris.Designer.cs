@@ -1,4 +1,8 @@
-﻿namespace SISWin
+﻿using System;
+using ISK = SISIsKatmani;
+using VAR = SISVarliklar;
+
+namespace SISWin
 {
     partial class FormGiris
     {
@@ -63,6 +67,7 @@
             // txtKullanici
             // 
             txtKullanici.Location = new Point(391, 109);
+            txtKullanici.MaxLength = 100;
             txtKullanici.Name = "txtKullanici";
             txtKullanici.Size = new Size(100, 23);
             txtKullanici.TabIndex = 2;
@@ -83,6 +88,7 @@
             // txtParola
             // 
             txtParola.Location = new Point(391, 143);
+            txtParola.MaxLength = 10;
             txtParola.Multiline = true;
             txtParola.Name = "txtParola";
             txtParola.PasswordChar = '*';

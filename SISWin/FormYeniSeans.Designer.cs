@@ -59,6 +59,7 @@
             btnKaydet.TabIndex = 1;
             btnKaydet.Text = "Kaydet";
             btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Click += btnKaydet_Click;
             // 
             // label1
             // 
@@ -159,6 +160,7 @@
             Name = "FormYeniSeans";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Randevu Kaydet";
+            Load += FormYeniSeans_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
