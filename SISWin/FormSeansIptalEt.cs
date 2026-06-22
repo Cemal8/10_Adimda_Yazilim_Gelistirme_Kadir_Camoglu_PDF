@@ -34,11 +34,42 @@ namespace SISWin
             InitializeComponent();
         }
 
-      
+        private void btnIptal_Click(object sender, EventArgs e)
+        {
+            bool dogruMu = KullanıcıGirdisiDogrula();
+
+            if (!dogruMu)
+            {
+                return;
+            }
+
+            bool sonuc = false;
+            // servis çağırılıyor
+            try
+            {
+                sonuc = ISK.Seans.IptalEt(seans);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonuc)
+            {
+                MessageBox.Show("Seans iptal edildi.");
+            }
+            else
+            {
+                MessageBox.Show("Oluşan bir hata nedeniyle seans iptal edilemedi.");
+            }
+
+            this.Close();
+        }
 
         private void FormSeansIptalEt_Load(object sender, EventArgs e)
         {
-           lblUzman.Text = seans.GoruntuMetni;
+            lblUzman.Text = seans.GoruntuMetni;
             lblSeans.Text = seans.GoruntuMetni;
             seans.IptalEdenNo = Program.KullaniciNo;
         }

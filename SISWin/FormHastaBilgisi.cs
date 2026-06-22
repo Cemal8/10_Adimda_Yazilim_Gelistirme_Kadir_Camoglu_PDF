@@ -20,6 +20,67 @@ namespace SISWin
             InitializeComponent();
         }
 
+        private void FormHastaBilgisi_Load(object sender, EventArgs e)
+        {
+            //
+            dtpDogumTarihi.Value = DateTime.Now;
+            cbbCinsiyet.SelectedIndex = 0;
+
+            if (hasta != null)
+            {
+                HastaYukle();
+            }
+        }
+
+        private void btnKaydet_Click(object sender, EventArgs e)
+        {
+            bool dogruMu = KullanıcıGirdisiDogrula();
+
+            if (!dogruMu)
+            {
+                return;
+            }
+
+            // yeni kayıtsa, yeni bir calisan nesnesi olusturuluyor.
+            if (hasta == null)
+            {
+                hasta = new SISVarliklar.Hasta();
+            }
+
+            hasta.Ad = txtAd.Text;
+            hasta.Adres = txtAdres.Text;
+            hasta.CepTel = txtGsmNo.Text;
+            hasta.Cinsiyet = cbbCinsiyet.Items[cbbCinsiyet.SelectedIndex].ToString();
+            hasta.DogumTarihi = dtpDogumTarihi.Value;
+            hasta.Eposta = txtEPosta.Text;
+            hasta.EvTel = txtTelefon.Text;
+            hasta.Soyad = txtSoyad.Text;
+            hasta.TcKimlikNo = txtKimlikNo.Text;
+
+            int sonuc = 0;
+
+            // servis çağırılıyor
+            try
+            {
+                sonuc = ISK.Hasta.Kaydet(hasta);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonuc > 0)
+            {
+                MessageBox.Show("Kayıt işlemi tamamlandı");
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("İşlem hatalı");
+            }
+        }
+
         private void HastaYukle()
         {
             txtAd.Text = hasta.Ad;
@@ -80,14 +141,6 @@ namespace SISWin
             return true;
         }
 
-        private void FormHastaBilgisi_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnKaydet_Click(object sender, EventArgs e)
-        {
-
-        }
+   
     }
 }

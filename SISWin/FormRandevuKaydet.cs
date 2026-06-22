@@ -21,12 +21,39 @@ namespace SISWin
 
         private void UzmanlariYukle()
         {
+            VAR.Calisan[] calisanlar = null;
+            // servis çağırılıyor
+            try
+            {
+                calisanlar = ISK.Calisan.UzmanlariListele();
+            }
+            catch (Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
 
+            cbbUzmanlar.DataSource = calisanlar;
+            cbbUzmanlar.DisplayMember = "GoruntuMetni";
         }
 
         private void UzmanSeanslariniYukle()
         {
+            VAR.Seans[] seanslar = null;
 
+            // servis çağırılıyor
+            try
+            {
+                seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
+            }
+            catch (Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            cbbSeanslar.DataSource = seanslar;
+            cbbSeanslar.DisplayMember = "GoruntuMetni";
         }
 
         private bool KullanıcıGirdisiDogrula()
@@ -65,7 +92,34 @@ namespace SISWin
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
+            bool dogruMu = KullanıcıGirdisiDogrula();
+            bool sonuc = false;
 
+            if (!dogruMu)
+            {
+                return;
+            }
+
+            try
+            {
+                seans.HastaNo = hasta.No;
+                sonuc = ISK.Seans.RandevuKaydet(seans.No, hasta.No);
+            }
+            catch (Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonuc)
+            {
+                MessageBox.Show("Kayıt işlemi tamamlandı.");
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("İşlem hatalı!");
+            }
         }
 
         private void FormRandevuKaydet_Load(object sender, EventArgs e)
@@ -73,5 +127,7 @@ namespace SISWin
             lblHasta.Text = hasta.GoruntuMetni;
             UzmanlariYukle();
         }
+
+
     }
 }

@@ -49,7 +49,33 @@ namespace SISWin
 
         private void btnDegistir_Click(object sender, EventArgs e)
         {
+            bool dogruMu = KullanıcıGirdisiDogrula();
+            if (!dogruMu)
+            {
+                return;
+            }
 
+            // servis çağırılıyor
+            bool sonuc = false;
+            try
+            {
+                sonuc = ISK.Calisan.ParolaDegistir(calisan.No, txtYeni.Text);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonuc)
+            {
+                MessageBox.Show("Parola değiştirildi.");
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("İşlem gerçekleştirilirken bir hata oluştu.");
+            }
         }
     }
 }

@@ -42,16 +42,56 @@ namespace SISWin
             return true;
         }
 
-       
+        private void btnKaydet_Click(object sender, EventArgs e)
+        {
+            lblUzman.Text = uzman.GoruntuMetni;
+
+            bool dogruMu = KullanıcıGirdisiDogrula();
+
+            if (!dogruMu)
+            {
+                return;
+            }
+
+            VAR.Seans seans = new SISVarliklar.Seans();
+            seans.UzmanNo = uzman.No;
+            //seans.Tarih = dtpTarih.Value;
+            seans.BaslangicSaati = dtpBaslangicSaati.Value.ToShortTimeString();
+            seans.BitisSaati = dtpBitisSaati.Value.ToShortTimeString();
+
+            int sonuc = 0;
+
+            // servis çağırılıyor
+            try
+            {
+                sonuc = ISK.Seans.Kaydet(seans);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonuc > 0)
+            {
+                MessageBox.Show("Kayıt işlemi tamamlandı.");
+                this.Close();
+            }
+            else if (sonuc == -1)
+            {
+                MessageBox.Show("Seans saatlerinde çakışma var!");
+            }
+            else
+            {
+                MessageBox.Show("İşlem hatalı!");
+            }
+        }
 
         private void FormYeniSeans_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
-        {
-            lblUzman.Text = uzman.GoruntuMetni;
-        }
+      
     }
 }

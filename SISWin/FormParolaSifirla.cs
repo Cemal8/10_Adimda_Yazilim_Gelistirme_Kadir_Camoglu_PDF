@@ -21,7 +21,22 @@ namespace SISWin
 
         private void btnSifirla_Click(object sender, EventArgs e)
         {
+            bool dogruMu = KullanıcıGirdisiDogrula();
+            if (!dogruMu)
+            {
+                return;
+            }
 
+            bool sonuc = false;
+            try
+            {
+                sonuc = ISK.Calisan.ParolaSifirla(txtEPosta.Text, txtParola.Text);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
         }
 
         private bool KullanıcıGirdisiDogrula()

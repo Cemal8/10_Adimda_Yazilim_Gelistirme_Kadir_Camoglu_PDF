@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System;
 using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
+using SISIsKatmani;
 namespace SISWin
 {
     public partial class FormSekreterBilgisi : Form
@@ -68,11 +69,55 @@ namespace SISWin
 
         private void FormSekreterBilgisi_Load(object sender, EventArgs e)
         {
-
+            if(calisan != null)
+            {
+                UzmanYukle();
+            }
         }
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
+            bool dogruMu = KullanıcıGirdisiDogrula();
+
+            if(!dogruMu)
+            {
+                return;
+            }
+
+            if (calisan == null)
+            {
+                calisan = new SISVarliklar.Calisan();
+            }
+
+            calisan.Ad = txtAd.Text;
+            calisan.Soyad = txtSoyad.Text;
+            calisan.TcKimlikNo = txtKimlikNo.Text;
+            calisan.CalisanTipi = VAR.CalisanTipleri.Sekreter;
+            calisan.CepTel = txtGsmNo.Text;
+            calisan.Eposta = txtEPosta.Text;
+            calisan.EvTel = txtTelefon.Text;
+
+            int sonuc = 0;
+
+            try
+            {
+                sonuc = ISK.Calisan.Kaydet(calisan);
+            }
+            catch(Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu");
+            }
+
+            if (sonuc > 0)
+            {
+                MessageBox.Show("Kayıt işlemi tamamlandı");
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("İşlem hatalı");
+            }
 
         }
     }

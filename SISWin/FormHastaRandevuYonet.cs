@@ -18,14 +18,71 @@ namespace SISWin
         private VAR.Seans sonRandevu = null;
         private VAR.Seans sonSeans = null;
 
-        private void RandevuBilgisiYukle()
-        {
-
-        }
 
         private void HastalariListele()
         {
+            lstHastalar.DisplayMember = "GoruntuMetni";
+            VAR.Hasta[] hastalar = null;
 
+            // servis çağırılıyor
+            try
+            {
+                hastalar = ISK.Hasta.HastalariListele(txtAd.Text, txtSoyad.Text);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+            finally
+            {
+                lstHastalar.DataSource = hastalar;
+            }
+        }
+
+        private void RandevuBilgisiYukle()
+        {
+            RandevuBilgisiTemizle();
+
+            // servis çağırılıyor
+            try
+            {
+                sonRandevu = ISK.Seans.SonRandevuBilgisiGetir(hasta.No);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonRandevu != null)
+            {
+                lblRandevuSeans.Text = sonRandevu.GoruntuMetni;
+                lblRandevuUzman.Text = sonRandevu.UzmanBilgisi;
+                lnkRandevuIptalEt.Enabled = true;
+            }
+            else
+            {
+                lnkYeniRandevu.Enabled = true;
+            }
+
+            // servis çağırılıyor
+            try
+            {
+                sonSeans = ISK.Seans.SonSeansBilgisiGetir(hasta.No);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            if (sonSeans != null)
+            {
+                lblSeansUzman.Text = sonSeans.UzmanBilgisi;
+                lblSeansSeans.Text = sonSeans.GoruntuMetni;
+                lblSeansNot.Text = sonSeans.SeansNotu;
+            }
         }
 
 
@@ -78,10 +135,6 @@ namespace SISWin
             InitializeComponent();
         }
 
-
-
-
-
         private void btnAra_Click(object sender, EventArgs e)
         {
             HastalariListele();
@@ -124,7 +177,27 @@ namespace SISWin
 
         private void lnkRandevuIptalEt_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            string mesaj = "Randevuyu iptal etmek istediğinize emin misiniz?";
+            DialogResult karar = MessageBox.Show(mesaj, "İptal Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+            if (karar == DialogResult.Yes)
+            {
+                bool sonuc = false;
+                try
+                {
+                    sonuc = ISK.Seans.RandevuIptalEt(sonRandevu.No);
+                }
+                catch (Exception ex)
+                {
+                    ISK.Yardimci.HataKaydet(ex);
+                    MessageBox.Show("Serviste bir hata oluştu!");
+                }
+
+                if (sonuc)
+                {
+                    RandevuBilgisiYukle();
+                }
+            }
         }
 
         private void lstHastalar_SelectedIndexChanged(object sender, EventArgs e)

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using VAR = SISVarliklar;
 using ISK = SISIsKatmani;
+using SISIsKatmani;
+using SISVeriErisimKatmani;
+using System;
 namespace SISWin
 {
     public partial class FormAnaSayfa : Form
@@ -59,8 +62,34 @@ namespace SISWin
 
         private void FormAnaSayfa_Load(object sender, EventArgs e)
         {
-            SaatYaz();
+            SISIsKatmani.Yardimci.HataKaydet(new Exception("Hata kaydet testi."));
 
+            this.Hide();
+            FormGiris frm = new FormGiris();
+            frm.ShowDialog(this);
+
+            if (SISIsKatmani.Yardimci.KullaniciNo > 0)
+            {
+                SaatYaz();
+
+                try
+                {
+                    calisan = SISIsKatmani.Calisan.CalisanGetir(SISIsKatmani.Yardimci.KullaniciNo);
+                }
+                catch (Exception ex)
+                {
+                    SISIsKatmani.Yardimci.HataKaydet(ex);
+                    MessageBox.Show("Serviste bir hata oluştu!");
+                }
+
+                tslKullanici.Text = calisan.GoruntuMetni;
+
+                MenuYukle();
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void tmrSaat_Tick(object sender, EventArgs e)

@@ -114,7 +114,6 @@ namespace SISWin
             lblAyrac.Name = "lblAyrac";
             lblAyrac.Size = new Size(195, 2);
             lblAyrac.TabIndex = 6;
-            lblAyrac.Click += lblAyrac_Click;
             // 
             // FormGiris
             // 
@@ -138,15 +137,7 @@ namespace SISWin
             PerformLayout();
         }
 
-        private void lblAyrac_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void btnGir_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         private void txtParola_TextChanged(object sender, EventArgs e)
         {

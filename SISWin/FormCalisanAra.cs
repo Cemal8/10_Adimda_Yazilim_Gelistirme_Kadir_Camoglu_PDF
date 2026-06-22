@@ -22,8 +22,23 @@ namespace SISWin
         }
 
         private void CalisanlariListele()
-        { 
-        
+        {
+            VAR.Calisan[] calisanlar = null;
+            lstCalisanlar.DisplayMember = "GoruntuMetni";
+            // servis çağırılıyor
+            try
+            {
+                calisanlar = ISK.Calisan.CalisanlariListele(txtAd.Text, txtSoyad.Text);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+            finally
+            {
+                lstCalisanlar.DataSource = calisanlar;
+            }
         }
 
         private void btnAra_Click(object sender, EventArgs e)
@@ -53,5 +68,7 @@ namespace SISWin
             lstCalisanlar.SelectedIndex = indeks;
             
         }
+
+
     }
 }

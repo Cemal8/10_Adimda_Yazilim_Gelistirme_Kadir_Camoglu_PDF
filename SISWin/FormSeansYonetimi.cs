@@ -20,12 +20,40 @@ namespace SISWin
             InitializeComponent();
         }
 
-        private void UzmanlarıYukle()
+        private void UzmanlariYukle()
         {
-
+            cbbUzmanlar.DataSource = ISK.Calisan.UzmanlariListele();
+            cbbUzmanlar.DisplayMember = "GoruntuMetni";
         }
 
         private void UzmanSeanslariniYukle()
+        {
+            VAR.Seans[] seanslar = null;
+            // servis çağırılıyor
+            try
+            {
+                seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            lstSeanslar.DataSource = seanslar;
+            lstSeanslar.DisplayMember = "GoruntuMetni";
+
+            if (lstSeanslar.Items.Count > 0 && lstSeanslar.SelectedIndex > -1)
+            {
+                lnkSeansIptalEt.Enabled = true;
+            }
+            else
+            {
+                lnkSeansIptalEt.Enabled = false;
+            }
+        }
+
+        private void UzmanlarıYukle()
         {
 
         }

@@ -22,19 +22,69 @@ namespace SISWin
 
         private void UzmanSeanslariniYukle()
         {
+            VAR.Seans[] seanslar = null;
 
+            try
+            {
+                seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            cbbSeanslar.DataSource = seanslar;
+            cbbSeanslar.DisplayMember = "GoruntuMetni";
         }
-
         private void BilgileriYukle()
         {
+            if (hasta != null)
+            {
+                lblAd.Text = hasta.Ad;
+                lblAdres.Text = hasta.Adres;
+                lblGsmNo.Text = hasta.CepTel;
+                lblCinsiyet.Text = hasta.Cinsiyet;
+                lblDogumTarihi.Text = hasta.DogumTarihi.ToShortDateString();
+                lblEPosta.Text = hasta.Eposta;
+                lblTelefon.Text = hasta.EvTel;
+                lblSoyad.Text = hasta.Soyad;
+                lblTCKimlikNo.Text = hasta.TcKimlikNo;
 
+                txtAktifSeansNotu.Text = aktifseans.SeansNotu;
+
+                VAR.Seans[] hastaSeanslari = null;
+
+                try
+                {
+                    hastaSeanslari = ISK.Seans.HastaSeanslariniListele(hasta.No);
+                }
+                catch (Exception ex)
+                {
+                    ISK.Yardimci.HataKaydet(ex);
+                    MessageBox.Show("Serviste bir hata oluştu!");
+                }
+
+                lstSeanslar.DataSource = hastaSeanslari;
+                lstSeanslar.DisplayMember = "GoruntuMetni";
+            }
         }
-
-        private void SeansNotuKaydet(int seansNo, string seansNotu)
+        private bool SeansNotuKaydet(int seansNo, string seansNotu)
         {
+            bool sonuc = false;
 
+            try
+            {
+                sonuc = ISK.Seans.NotGuncelle(seansNo, seansNotu);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            return sonuc;
         }
-
         private void EkranıTemizle()
         {
             hasta = null;
@@ -48,32 +98,51 @@ namespace SISWin
             lblTelefon.Text = "";
             lblSoyad.Text = "";
         }
-
         public FormUzmanSeansYonetimi()
         {
             InitializeComponent();
         }
-
         private void FormUzmanSeansYonetimi_Load(object sender, EventArgs e)
         {
+            EkranıTemizle();
 
+            try
+            {
+                uzman = ISK.Calisan.CalisanGetir(Program.KullaniciNo);
+            }
+            catch (Exception ex)
+            {
+                ISK.Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste bir hata oluştu!");
+            }
+
+            UzmanSeanslariniYukle();
         }
-
         private void cbbSeanslar_SelectedIndexChanged(object sender, EventArgs e)
         {
-            gecmisSeans = (VAR.Seans)cbbSeanslar.SelectedItem;
-            if (gecmisSeans != null)
+            EkranıTemizle();
+
+            aktifseans = (VAR.Seans)cbbSeanslar.SelectedItem;
+
+            if (aktifseans.HastaNo > 0)
             {
-                txtGecmisSeansNotu.Text = gecmisSeans.SeansNotu;
+                try
+                {
+                    hasta = ISK.Hasta.HastaGetir(aktifseans.HastaNo);
+                }
+                catch (Exception ex)
+                {
+                    ISK.Yardimci.HataKaydet(ex);
+                    MessageBox.Show("Serviste bir hata oluştu!");
+                }
             }
+
+            BilgileriYukle();
         }
-
-
         private void txtGecmisSeansNotu_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void btnKaydet_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtGecmisSeansNotu.Text))
@@ -93,7 +162,6 @@ namespace SISWin
                 MessageBox.Show("Seans notu kaydedilemedi.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btnGüncelle_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtGecmisSeansNotu.Text))

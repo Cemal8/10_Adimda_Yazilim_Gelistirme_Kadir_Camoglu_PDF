@@ -49,6 +49,7 @@ namespace SISVarliklar
                 }
             }
         }
+
     }
 
     public enum CalisanTipleri
