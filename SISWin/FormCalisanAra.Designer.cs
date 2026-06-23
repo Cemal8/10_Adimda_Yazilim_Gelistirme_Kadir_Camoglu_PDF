@@ -66,6 +66,7 @@
             btnAra.TabIndex = 29;
             btnAra.Text = "Ara";
             btnAra.UseVisualStyleBackColor = true;
+            btnAra.Click += btnAra_Click_1;
             // 
             // txtAd
             // 

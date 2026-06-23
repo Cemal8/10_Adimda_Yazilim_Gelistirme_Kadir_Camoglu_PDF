@@ -30,7 +30,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -61,7 +61,7 @@ namespace SISWin
                 }
                 catch (Exception ex)
                 {
-                    ISK.Yardimci.HataKaydet(ex);
+                    Yardimci.HataKaydet(ex);
                     MessageBox.Show("Serviste bir hata oluştu!");
                 }
 
@@ -79,7 +79,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -108,11 +108,11 @@ namespace SISWin
 
             try
             {
-                uzman = ISK.Calisan.CalisanGetir(Program.KullaniciNo);
+                uzman = ISK.Calisan.CalisanGetir(Yardimci.KullaniciNo);
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -132,7 +132,7 @@ namespace SISWin
                 }
                 catch (Exception ex)
                 {
-                    ISK.Yardimci.HataKaydet(ex);
+                    Yardimci.HataKaydet(ex);
                     MessageBox.Show("Serviste bir hata oluştu!");
                 }
             }
@@ -145,7 +145,8 @@ namespace SISWin
         }
         private void btnKaydet_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtGecmisSeansNotu.Text))
+            //  DOĞRU KONTROL: txtGecmisSeansNotu yerine txtAktifSeansNotu.Text kontrol edilmeli:
+            if (string.IsNullOrEmpty(txtAktifSeansNotu.Text.Trim()))
             {
                 MessageBox.Show("Seans notu boş olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtAktifSeansNotu.Focus();

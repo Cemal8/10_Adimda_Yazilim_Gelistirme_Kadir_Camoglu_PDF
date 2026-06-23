@@ -81,24 +81,37 @@ namespace SISWin
 
         private void cbbUzmanlar_SelectedIndexChanged(object sender, EventArgs e)
         {
-            uzman = (VAR.Calisan)cbbUzmanlar.SelectedItem;
-            UzmanSeanslariniYukle();
+            if (cbbUzmanlar.SelectedItem is VAR.Calisan secilenUzman)
+            {
+                uzman = secilenUzman;
+                UzmanSeanslariniYukle();
+            }
         }
 
         private void cbbSeanslar_SelectedIndexChanged(object sender, EventArgs e)
         {
-            seans = (VAR.Seans)cbbSeanslar.SelectedItem;
+            if (cbbSeanslar.SelectedItem is VAR.Seans secilenSeans)
+            {
+                seans = secilenSeans;
+            }
+            else
+            {
+                seans = null; // Eğer seans seçili değilse null yap ki validasyon yakalasın
+            }
         }
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
+            if (hasta == null)
+            {
+                MessageBox.Show("Hasta bilgisi bulunamadığı için randevu kaydedilemiyor!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             bool dogruMu = KullanıcıGirdisiDogrula();
             bool sonuc = false;
 
-            if (!dogruMu)
-            {
-                return;
-            }
+            if (!dogruMu) return;
 
             try
             {
@@ -118,7 +131,7 @@ namespace SISWin
             }
             else
             {
-                MessageBox.Show("İşlem hatalı!");
+                MessageBox.Show("İşlem gerçekleştirilemedi. Bu seans dolu olabilir veya bir hata oluştu.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

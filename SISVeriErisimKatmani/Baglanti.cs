@@ -5,11 +5,9 @@ namespace SISVeriErisimKatmani
 {
     public class Baglanti
     {
-        private static string baglantiMetni = @"Data Source=.\SQLEXPRESS;Initial Catalog=SIS;User ID=sa;Password=DbPass..;TrustServerCertificate=True;";
-
-        /// <summary>
-        /// Yeni bir bağlantı oluşturularak yollanıyor.
-        /// </summary>
+        private static readonly string baglantiMetni = @"Data Source=.\SQLEXPRESS;Initial Catalog=SIS;User ID=sa;Password=DbPass..;TrustServerCertificate=True;";        /// <summary>
+                                                                                                                                                                         /// Yeni bir bağlantı oluşturularak yollanıyor.
+                                                                                                                                                                         /// </summary>
         public static SqlConnection BaglantiGetir()
         {
             SqlConnection baglanti = new SqlConnection(baglantiMetni);

@@ -31,7 +31,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
             finally
@@ -51,7 +51,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -73,7 +73,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -189,7 +189,7 @@ namespace SISWin
                 }
                 catch (Exception ex)
                 {
-                    ISK.Yardimci.HataKaydet(ex);
+                    Yardimci.HataKaydet(ex);
                     MessageBox.Show("Serviste bir hata oluştu!");
                 }
 

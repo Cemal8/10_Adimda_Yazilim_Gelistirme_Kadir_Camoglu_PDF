@@ -35,8 +35,8 @@ namespace SISWin
                 txtYeni.Focus();
                 return false;
             }
-         
-            if (txtYeni2.Text != txtYeni2.Text)
+
+            if (txtYeni.Text != txtYeni2.Text)
             {
                 MessageBox.Show("Yeni Parola ve Yeni Parola Tekrar alanları aynı olmalıdır.");
                 txtYeni2.Select();
@@ -55,7 +55,7 @@ namespace SISWin
                 return;
             }
 
-            // servis çağırılıyor
+
             bool sonuc = false;
             try
             {
@@ -63,18 +63,18 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
             if (sonuc)
             {
-                MessageBox.Show("Parola değiştirildi.");
+                MessageBox.Show("Parola başarıyla değiştirildi.");
                 this.Close();
             }
             else
             {
-                MessageBox.Show("İşlem gerçekleştirilirken bir hata oluştu.");
+                MessageBox.Show("Parola güncellendi ancak bir hata oluştu (E-posta gönderilememiş veya servis hatası olabilir). Lütfen giriş yapmayı deneyin.");
             }
         }
     }

@@ -14,7 +14,8 @@ namespace SISWin
 {
     public partial class FormSeansYonetimi : Form
     {
-        public SISVarliklar.Calisan uzman;
+        public VAR.Calisan uzman;
+
         public FormSeansYonetimi()
         {
             InitializeComponent();
@@ -29,14 +30,13 @@ namespace SISWin
         private void UzmanSeanslariniYukle()
         {
             VAR.Seans[] seanslar = null;
-            // servis çağırılıyor
             try
             {
                 seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -55,7 +55,7 @@ namespace SISWin
 
         private void UzmanlarıYukle()
         {
-
+            UzmanlariYukle(); 
         }
 
         private void FormSeansYonetimi_Load(object sender, EventArgs e)
@@ -71,8 +71,7 @@ namespace SISWin
 
         private void lnkSeansEkle_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            FormYeniSeans frm = new FormYeniSeans();
-            frm.uzman = this.uzman; 
+            FormYeniSeans frm = new FormYeniSeans(this.uzman);
             frm.ShowDialog();
 
             UzmanSeanslariniYukle();
@@ -83,7 +82,9 @@ namespace SISWin
             VAR.Seans seans = (VAR.Seans)lstSeanslar.SelectedItem;
 
             FormSeansIptalEt frm = new FormSeansIptalEt();
-            frm.seans = seans; 
+            frm.seans = seans;
+            
+            frm.uzmanAdi = cbbUzmanlar.Text;
             frm.ShowDialog();
 
             UzmanSeanslariniYukle();

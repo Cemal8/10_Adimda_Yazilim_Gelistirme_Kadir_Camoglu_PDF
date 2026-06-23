@@ -1,16 +1,8 @@
 using SISIsKatmani;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ISK = SISIsKatmani;
-using VAR = SISVarliklar;
-using SISWin; 
+
 namespace SISWin
 {
     public partial class FormGiris : Form
@@ -22,7 +14,6 @@ namespace SISWin
 
         private void btnGir_Click(object sender, EventArgs e)
         {
-            // kullanıcı girişi doğrulama
             if (string.IsNullOrEmpty(txtKullanici.Text))
             {
                 MessageBox.Show("Kullanıcı bilgisini boş geçemezsiniz.");
@@ -40,7 +31,7 @@ namespace SISWin
             }
 
             int calisanNo = 0;
-            // servis çağırılıyor
+
             try
             {
                 calisanNo = ISK.Calisan.KullaniciGirisiniDogrula(txtKullanici.Text, txtParola.Text);
@@ -49,11 +40,13 @@ namespace SISWin
             {
                 Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
+                return;
             }
 
             if (calisanNo > 0)
             {
-                SISWin.Program.KullaniciNo = calisanNo;
+                // Önce numarayı atıyoruz, sonra formu güvenle kapatıyoruz
+                Yardimci.KullaniciNo = calisanNo;
                 this.Close();
             }
             else

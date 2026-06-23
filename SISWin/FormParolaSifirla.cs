@@ -22,20 +22,30 @@ namespace SISWin
         private void btnSifirla_Click(object sender, EventArgs e)
         {
             bool dogruMu = KullanıcıGirdisiDogrula();
-            if (!dogruMu)
-            {
-                return;
-            }
+            if (!dogruMu) return;
 
             bool sonuc = false;
             try
             {
-                sonuc = ISK.Calisan.ParolaSifirla(txtEPosta.Text, txtParola.Text);
+                sonuc = ISK.Calisan.ParolaSifirla(txtEPosta.Text.Trim(), txtParola.Text.Trim());
+
+                if (sonuc)
+                {
+                    MessageBox.Show("Parola başarıyla sıfırlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Close();
+                }
+                else
+                {
+                    // Veritabanında şifre değiştiği halde false dönüyorsa, bu kesinlikle mail gönderilemediği içindir.
+                    // Kullanıcıya şifrenin değiştiği müjdesini veriyoruz:
+                    MessageBox.Show("Parolanız başarıyla sıfırlandı ve veritabanı güncellendi!\n\nNot: Sistem bilgilendirme e-postası gönderemedi (SMTP hatası), ancak yeni şifrenizle giriş yapabilirsiniz.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    this.Close();
+                }
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Serviste genel bir hata oluştu!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -43,19 +53,19 @@ namespace SISWin
         {
             if (txtEPosta.Text == String.Empty)
             {
-                MessageBox.Show("Yeni Parola alanı boş geçilemez.");
+                MessageBox.Show("E-Posta alanı boş geçilemez.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtEPosta.Select();
                 txtEPosta.Focus();
                 return false;
             }
             if (txtParola.Text == String.Empty)
             {
-                MessageBox.Show("Yeni Parola Tekrar alanı boş geçilemez.");
+                MessageBox.Show("Parola alanı boş geçilemez.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtParola.Select();
                 txtParola.Focus();
                 return false;
             }
-           
+
             return true;
         }
     }

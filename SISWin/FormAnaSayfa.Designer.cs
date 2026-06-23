@@ -38,7 +38,6 @@
             mniCalisanAra = new ToolStripMenuItem();
             mniRandevuYonet = new ToolStripMenuItem();
             mniSeansYonetSekreter = new ToolStripMenuItem();
-            mniSeansYonetUzman = new ToolStripMenuItem();
             mniAyrac = new ToolStripMenuItem();
             mniCikis = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
@@ -46,6 +45,7 @@
             tslTarih = new ToolStripStatusLabel();
             tslSaat = new ToolStripStatusLabel();
             tmrSaat = new System.Windows.Forms.Timer(components);
+            uzmanSeansYönetToolStripMenuItem = new ToolStripMenuItem();
             ManinMenu.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -61,7 +61,7 @@
             // 
             // menüToolStripMenuItem
             // 
-            menüToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mniParolaDegistir, mniParolaSifirla, mniUzmanKaydet, mniSekreterKaydet, mniCalisanAra, mniRandevuYonet, mniSeansYonetSekreter, mniSeansYonetUzman, mniAyrac, mniCikis });
+            menüToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mniParolaDegistir, mniParolaSifirla, mniUzmanKaydet, mniSekreterKaydet, mniCalisanAra, mniRandevuYonet, mniSeansYonetSekreter, uzmanSeansYönetToolStripMenuItem, mniAyrac, mniCikis });
             menüToolStripMenuItem.Name = "menüToolStripMenuItem";
             menüToolStripMenuItem.Size = new Size(50, 20);
             menüToolStripMenuItem.Text = "&Menü";
@@ -70,62 +70,64 @@
             // mniParolaDegistir
             // 
             mniParolaDegistir.Name = "mniParolaDegistir";
-            mniParolaDegistir.Size = new Size(180, 22);
+            mniParolaDegistir.Size = new Size(199, 22);
             mniParolaDegistir.Text = "Parola &Değiştir";
+            mniParolaDegistir.Click += mniParolaDegistir_Click_1;
             // 
             // mniParolaSifirla
             // 
             mniParolaSifirla.Name = "mniParolaSifirla";
-            mniParolaSifirla.Size = new Size(180, 22);
+            mniParolaSifirla.Size = new Size(199, 22);
             mniParolaSifirla.Text = "Parola Sıfırla";
+            mniParolaSifirla.Click += mniParolaSifirla_Click_1;
             // 
             // mniUzmanKaydet
             // 
             mniUzmanKaydet.Name = "mniUzmanKaydet";
-            mniUzmanKaydet.Size = new Size(180, 22);
+            mniUzmanKaydet.Size = new Size(199, 22);
             mniUzmanKaydet.Text = "&Uzman Kaydet";
+            mniUzmanKaydet.Click += mniUzmanKaydet_Click_1;
             // 
             // mniSekreterKaydet
             // 
             mniSekreterKaydet.Name = "mniSekreterKaydet";
-            mniSekreterKaydet.Size = new Size(180, 22);
+            mniSekreterKaydet.Size = new Size(199, 22);
             mniSekreterKaydet.Text = "&Sekreter Kaydet";
+            mniSekreterKaydet.Click += mniSekreterKaydet_Click_1;
             // 
             // mniCalisanAra
             // 
             mniCalisanAra.Name = "mniCalisanAra";
-            mniCalisanAra.Size = new Size(180, 22);
+            mniCalisanAra.Size = new Size(199, 22);
             mniCalisanAra.Text = "Çalışan &Ara";
+            mniCalisanAra.Click += mniCalisanAra_Click1;
             // 
             // mniRandevuYonet
             // 
             mniRandevuYonet.Name = "mniRandevuYonet";
-            mniRandevuYonet.Size = new Size(180, 22);
-            mniRandevuYonet.Text = "&Randevu Yönet";
+            mniRandevuYonet.Size = new Size(199, 22);
+            mniRandevuYonet.Text = "Hasta && &Randevu Yönet";
+            mniRandevuYonet.Click += mniRandevuYonet_Click1;
             // 
             // mniSeansYonetSekreter
             // 
             mniSeansYonetSekreter.Name = "mniSeansYonetSekreter";
-            mniSeansYonetSekreter.Size = new Size(180, 22);
+            mniSeansYonetSekreter.Size = new Size(199, 22);
             mniSeansYonetSekreter.Text = "&Seans Yönet";
-            // 
-            // mniSeansYonetUzman
-            // 
-            mniSeansYonetUzman.Name = "mniSeansYonetUzman";
-            mniSeansYonetUzman.Size = new Size(180, 22);
-            mniSeansYonetUzman.Text = "&Seans Yönet";
+            mniSeansYonetSekreter.Click += mniSeansYonetSekreter_Click1;
             // 
             // mniAyrac
             // 
             mniAyrac.Name = "mniAyrac";
-            mniAyrac.Size = new Size(180, 22);
+            mniAyrac.Size = new Size(199, 22);
             mniAyrac.Text = "-";
             // 
             // mniCikis
             // 
             mniCikis.Name = "mniCikis";
-            mniCikis.Size = new Size(180, 22);
+            mniCikis.Size = new Size(199, 22);
             mniCikis.Text = "&Çıkış";
+            mniCikis.Click += mniCikis_Click_1;
             // 
             // statusStrip1
             // 
@@ -158,6 +160,15 @@
             // tmrSaat
             // 
             tmrSaat.Enabled = true;
+            tmrSaat.Interval = 1000;
+            tmrSaat.Tick += tmrSaat_Tick_1;
+            // 
+            // uzmanSeansYönetToolStripMenuItem
+            // 
+            uzmanSeansYönetToolStripMenuItem.Name = "uzmanSeansYönetToolStripMenuItem";
+            uzmanSeansYönetToolStripMenuItem.Size = new Size(199, 22);
+            uzmanSeansYönetToolStripMenuItem.Text = "&Uzman &Seans Yönet";
+            uzmanSeansYönetToolStripMenuItem.Click += uzmanSeansYönetToolStripMenuItem_Click;
             // 
             // FormAnaSayfa
             // 
@@ -188,7 +199,6 @@
         private ToolStripMenuItem mniCalisanAra;
         private ToolStripMenuItem mniRandevuYonet;
         private ToolStripMenuItem mniSeansYonetSekreter;
-        private ToolStripMenuItem mniSeansYonetUzman;
         private ToolStripMenuItem mniCikis;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel tslKullanici;
@@ -196,5 +206,6 @@
         private ToolStripStatusLabel tslSaat;
         private ToolStripMenuItem mniAyrac;
         private System.Windows.Forms.Timer tmrSaat;
+        private ToolStripMenuItem uzmanSeansYönetToolStripMenuItem;
     }
 }

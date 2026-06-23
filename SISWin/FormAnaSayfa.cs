@@ -17,7 +17,6 @@ namespace SISWin
 {
     public partial class FormAnaSayfa : Form
     {
-        // 1. Form seviyesindeki çalışan değişkeni
         public VAR.Calisan calisan;
 
         public FormAnaSayfa()
@@ -25,14 +24,11 @@ namespace SISWin
             InitializeComponent();
         }
 
-        // --- YARDIMCI METOTLAR ---
-
         private void SaatYaz()
         {
             tslSaat.Text = DateTime.Now.ToLongTimeString();
             tslTarih.Text = DateTime.Now.ToLongDateString();
         }
-
         private void MenuYukle()
         {
             mniCikis.Visible = true;
@@ -43,18 +39,22 @@ namespace SISWin
                 case VAR.CalisanTipleri.SistemYoneticisi:
                     mniSekreterKaydet.Visible = true;
                     mniParolaSifirla.Visible = true;
-                    tslKullanici.Text += " (Sistem Yöneticisi)";
+                    tslKullanici.Text = calisan.Ad + " " + calisan.Soyad + " (Sistem Yöneticisi)";
                     break;
+
                 case VAR.CalisanTipleri.Sekreter:
                     mniRandevuYonet.Visible = true;
                     mniSeansYonetSekreter.Visible = true;
                     mniUzmanKaydet.Visible = true;
-                    tslKullanici.Text += " (Sekreter)";
+                    mniCalisanAra.Visible = true;
+                    tslKullanici.Text = calisan.Ad + " " + calisan.Soyad + " (Sekreter)";
                     break;
+
                 case VAR.CalisanTipleri.Uzman:
-                    mniSeansYonetUzman.Visible = true;
-                    tslKullanici.Text += " (Uzman)";
+                    uzmanSeansYönetToolStripMenuItem.Visible = true;
+                    tslKullanici.Text = calisan.Ad + " " + calisan.Soyad + " (Uzman)";
                     break;
+
                 default:
                     break;
             }
@@ -62,33 +62,31 @@ namespace SISWin
 
         private void FormAnaSayfa_Load(object sender, EventArgs e)
         {
-            SISIsKatmani.Yardimci.HataKaydet(new Exception("Hata kaydet testi."));
-
             this.Hide();
             FormGiris frm = new FormGiris();
             frm.ShowDialog(this);
 
-            if (SISIsKatmani.Yardimci.KullaniciNo > 0)
+            if (Yardimci.KullaniciNo > 0)
             {
+                this.Show();
                 SaatYaz();
+                tmrSaat.Start();
 
                 try
                 {
-                    calisan = SISIsKatmani.Calisan.CalisanGetir(SISIsKatmani.Yardimci.KullaniciNo);
+                    calisan = ISK.Calisan.CalisanGetir(Yardimci.KullaniciNo);
                 }
                 catch (Exception ex)
                 {
-                    SISIsKatmani.Yardimci.HataKaydet(ex);
+                    Yardimci.HataKaydet(ex);
                     MessageBox.Show("Serviste bir hata oluştu!");
                 }
-
-                tslKullanici.Text = calisan.GoruntuMetni;
 
                 MenuYukle();
             }
             else
             {
-                this.Close();
+                Application.Exit();
             }
         }
 
@@ -97,63 +95,83 @@ namespace SISWin
             SaatYaz();
         }
 
-        private void mniParolaDegistir_Click(object sender, EventArgs e)
+        private void menüToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tmrSaat_Tick_1(object sender, EventArgs e)
+        {
+            SaatYaz();
+        }
+
+        private void mniCikis_Click_1(object sender, EventArgs e)
+        {
+            this.Hide();
+            Yardimci.KullaniciNo = 0;
+
+            FormGiris frm = new FormGiris();
+            frm.ShowDialog(this);
+
+            if (Yardimci.KullaniciNo > 0)
+            {
+                FormAnaSayfa_Load(sender, e);
+            }
+            else
+            {
+                Application.Exit();
+            }
+        }
+
+        private void mniParolaDegistir_Click_1(object sender, EventArgs e)
         {
             FormParolaDegistir frm = new FormParolaDegistir();
             frm.calisan = this.calisan;
             frm.ShowDialog();
         }
 
-        private void mniParolaSifirla_Click(object sender, EventArgs e)
+        private void mniParolaSifirla_Click_1(object sender, EventArgs e)
         {
             FormParolaSifirla frm = new FormParolaSifirla();
             frm.ShowDialog();
         }
 
-        private void mniUzmanKaydet_Click(object sender, EventArgs e)
+        private void mniUzmanKaydet_Click_1(object sender, EventArgs e)
         {
             FormUzmanBilgisi frm = new FormUzmanBilgisi();
             frm.ShowDialog();
         }
 
-        private void mniSekreterKaydet_Click(object sender, EventArgs e)
+        private void mniSekreterKaydet_Click_1(object sender, EventArgs e)
         {
             FormSekreterBilgisi frm = new FormSekreterBilgisi();
             frm.ShowDialog();
         }
 
-        private void mniCalisanAra_Click(object sender, EventArgs e)
+        private void mniCalisanAra_Click1(object sender, EventArgs e)
         {
             FormCalisanAra frm = new FormCalisanAra();
             frm.ShowDialog();
         }
 
-        private void mniRandevuYonet_Click(object sender, EventArgs e)
+        private void mniRandevuYonet_Click1(object sender, EventArgs e)
         {
             FormHastaRandevuYonet frm = new FormHastaRandevuYonet();
             frm.ShowDialog();
         }
 
-        private void mniSeansYonetSekreter_Click(object sender, EventArgs e)
+        private void mniSeansYonetSekreter_Click1(object sender, EventArgs e)
         {
             FormSeansYonetimi frm = new FormSeansYonetimi();
             frm.ShowDialog();
         }
 
-        private void mniSeansYonetUzman_Click(object sender, EventArgs e)
+      
+
+        private void uzmanSeansYönetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormUzmanSeansYonetimi frm = new FormUzmanSeansYonetimi();
             frm.Show();
-        }
-
-        private void mniCikis_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void menüToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Mevcut boş metodunuz
         }
     }
 }

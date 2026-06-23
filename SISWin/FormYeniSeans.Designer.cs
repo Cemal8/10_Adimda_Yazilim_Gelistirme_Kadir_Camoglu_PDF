@@ -35,7 +35,7 @@
             label3 = new Label();
             label4 = new Label();
             lblUzman = new Label();
-            dtpBaslangicSaati = new DateTimePicker();
+            dtpTarih = new DateTimePicker();
             dtpBaslingicSaati = new DateTimePicker();
             dtpBitisSaati = new DateTimePicker();
             lblAyrac = new Label();
@@ -105,13 +105,13 @@
             lblUzman.Size = new Size(221, 26);
             lblUzman.TabIndex = 6;
             // 
-            // dtpBaslangicSaati
+            // dtpTarih
             // 
-            dtpBaslangicSaati.Format = DateTimePickerFormat.Short;
-            dtpBaslangicSaati.Location = new Point(439, 117);
-            dtpBaslangicSaati.Name = "dtpBaslangicSaati";
-            dtpBaslangicSaati.Size = new Size(221, 23);
-            dtpBaslangicSaati.TabIndex = 7;
+            dtpTarih.Format = DateTimePickerFormat.Short;
+            dtpTarih.Location = new Point(439, 117);
+            dtpTarih.Name = "dtpTarih";
+            dtpTarih.Size = new Size(221, 23);
+            dtpTarih.TabIndex = 7;
             // 
             // dtpBaslingicSaati
             // 
@@ -147,7 +147,7 @@
             Controls.Add(lblAyrac);
             Controls.Add(dtpBitisSaati);
             Controls.Add(dtpBaslingicSaati);
-            Controls.Add(dtpBaslangicSaati);
+            Controls.Add(dtpTarih);
             Controls.Add(lblUzman);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -175,7 +175,7 @@
         private Label label3;
         private Label label4;
         private Label lblUzman;
-        private DateTimePicker dtpBaslangicSaati;
+        private DateTimePicker dtpTarih;
         private DateTimePicker dtpBaslingicSaati;
         private DateTimePicker dtpBitisSaati;
         private Label lblAyrac;

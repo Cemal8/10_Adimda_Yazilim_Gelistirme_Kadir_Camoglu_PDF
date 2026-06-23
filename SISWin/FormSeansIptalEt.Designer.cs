@@ -56,6 +56,7 @@
             btnIptal.TabIndex = 31;
             btnIptal.Text = "İptal Et";
             btnIptal.UseVisualStyleBackColor = true;
+            btnIptal.Click += btnIptal_Click_1;
             // 
             // pictureBox1
             // 

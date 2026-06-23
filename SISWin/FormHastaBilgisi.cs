@@ -66,7 +66,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 

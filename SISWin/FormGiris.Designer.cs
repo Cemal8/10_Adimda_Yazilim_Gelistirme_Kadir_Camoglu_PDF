@@ -71,7 +71,6 @@ namespace SISWin
             txtKullanici.Name = "txtKullanici";
             txtKullanici.Size = new Size(100, 23);
             txtKullanici.TabIndex = 2;
-            txtKullanici.Text = "abc";
             txtKullanici.TextChanged += txtKullanici_TextChanged;
             // 
             // label2
@@ -94,7 +93,6 @@ namespace SISWin
             txtParola.PasswordChar = '*';
             txtParola.Size = new Size(100, 23);
             txtParola.TabIndex = 4;
-            txtParola.Text = "111";
             txtParola.TextChanged += txtParola_TextChanged;
             // 
             // btnGir
@@ -117,6 +115,7 @@ namespace SISWin
             // 
             // FormGiris
             // 
+            AcceptButton = btnGir;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
@@ -137,16 +136,14 @@ namespace SISWin
             PerformLayout();
         }
 
-     
+
 
         private void txtParola_TextChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void txtKullanici_TextChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

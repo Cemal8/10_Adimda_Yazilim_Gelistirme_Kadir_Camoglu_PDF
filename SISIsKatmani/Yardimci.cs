@@ -11,9 +11,10 @@ namespace SISIsKatmani
     public class Yardimci
     {
         public static int KullaniciNo { get; set; }
+
         public static void HataKaydet(Exception ex)
         {
-            string dosyaAdi = Path.Combine(Environment.CurrentDirectory, "SIsIsKatmani_Hata_" + Guid.NewGuid() + ".txt");
+            string dosyaAdi = Path.Combine(Environment.CurrentDirectory, "SISIsKatmani_Hata_" + Guid.NewGuid() + ".txt");
 
             File.WriteAllText(dosyaAdi, ex.ToString());
         }

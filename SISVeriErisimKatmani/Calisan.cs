@@ -17,7 +17,7 @@ namespace SISVeriErisimKatmani
             string spAdi = "prCalisanGirisiniDogrula";
             Komut k = new Komut(spAdi);
             k.ParametreEkle("@EPosta", ePosta);
-            k.ParametreEkle("@Sifre", sifre);
+            k.ParametreEkle("@parola", sifre);
 
             int sonuc = k.IsletInt32();
             k.Temizle();
@@ -55,6 +55,7 @@ namespace SISVeriErisimKatmani
                 calisan.Soyad = Komut.StringGetir(sdr, "Soyad");
                 calisan.TcKimlikNo = Komut.StringGetir(sdr, "TcKimlikNo");
                 calisan.Unvan = Komut.StringGetir(sdr, "Unvan");
+                calisan.Parola = Komut.StringGetir(sdr, "Parola");
 
                 int calisanTipi = Komut.Int16Getir(sdr, "CalisanTipi");
                 calisan.CalisanTipi = (VAR.CalisanTipleri)calisanTipi;

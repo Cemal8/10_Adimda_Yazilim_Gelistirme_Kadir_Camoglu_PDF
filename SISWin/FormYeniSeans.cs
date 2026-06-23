@@ -7,32 +7,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
 using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
 using SISVarliklar;
+
 namespace SISWin
 {
     public partial class FormYeniSeans : Form
     {
-        public VAR.Calisan uzman = null;
+        public VAR.Calisan uzman;
         private const int enKisaSeansSuresi = 30;
 
-        public FormYeniSeans()
+        public FormYeniSeans(VAR.Calisan seciliUzman)
         {
             InitializeComponent();
+            uzman = seciliUzman;
+            lblUzman.Text = uzman.GoruntuMetni;
         }
 
         private bool KullanıcıGirdisiDogrula()
         {
-            if (dtpBaslangicSaati.Value.Date < DateTime.Now.Date)
+            if (dtpTarih.Value.Date < DateTime.Now.Date)
             {
                 MessageBox.Show("Seans tarihi bugünden önce olamaz.");
-                dtpBaslangicSaati.Select();
-                dtpBaslangicSaati.Focus();
+                dtpTarih.Select();
+                dtpTarih.Focus();
                 return false;
             }
-            if (dtpBitisSaati.Value <= dtpBaslangicSaati.Value.AddMinutes(enKisaSeansSuresi))
+            if (dtpBitisSaati.Value <= dtpTarih.Value.AddMinutes(enKisaSeansSuresi))
             {
                 MessageBox.Show($"Seans süresi en az {enKisaSeansSuresi} dakika olmalıdır.");
                 dtpBitisSaati.Select();
@@ -44,7 +46,12 @@ namespace SISWin
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
-            lblUzman.Text = uzman.GoruntuMetni;
+            // ✅ null kontrolü eklendi (ekstra güvenlik için)
+            if (uzman == null)
+            {
+                MessageBox.Show("Uzman bilgisi bulunamadı!");
+                return;
+            }
 
             bool dogruMu = KullanıcıGirdisiDogrula();
 
@@ -55,8 +62,8 @@ namespace SISWin
 
             VAR.Seans seans = new SISVarliklar.Seans();
             seans.UzmanNo = uzman.No;
-            //seans.Tarih = dtpTarih.Value;
-            seans.BaslangicSaati = dtpBaslangicSaati.Value.ToShortTimeString();
+            seans.Tarih = dtpTarih.Value;
+            seans.BaslangicSaati = dtpBaslingicSaati.Value.ToShortTimeString();
             seans.BitisSaati = dtpBitisSaati.Value.ToShortTimeString();
 
             int sonuc = 0;
@@ -68,7 +75,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
 
@@ -91,7 +98,5 @@ namespace SISWin
         {
 
         }
-
-      
     }
 }

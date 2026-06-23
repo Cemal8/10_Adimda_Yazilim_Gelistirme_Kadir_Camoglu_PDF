@@ -32,7 +32,7 @@ namespace SISWin
             }
             catch (Exception ex)
             {
-                ISK.Yardimci.HataKaydet(ex);
+                Yardimci.HataKaydet(ex);
                 MessageBox.Show("Serviste bir hata oluştu!");
             }
             finally
@@ -41,7 +41,7 @@ namespace SISWin
             }
         }
 
-        private void btnAra_Click(object sender, EventArgs e)
+        private void btnAra_Click_1(object sender, EventArgs e)
         {
             CalisanlariListele();
         }
@@ -51,13 +51,13 @@ namespace SISWin
             int indeks = lstCalisanlar.SelectedIndex;
             VAR.Calisan calisan = (VAR.Calisan)lstCalisanlar.SelectedItem;
 
-            if (calisan.CalisanTipi==VAR.CalisanTipleri.Sekreter) 
+            if (calisan.CalisanTipi == VAR.CalisanTipleri.Sekreter)
             {
                 FormSekreterBilgisi frm = new FormSekreterBilgisi();
                 frm.calisan = calisan;
                 frm.ShowDialog();
             }
-            else if (calisan.CalisanTipi== VAR.CalisanTipleri.Uzman)
+            else if (calisan.CalisanTipi == VAR.CalisanTipleri.Uzman)
             {
                 FormUzmanBilgisi frm = new FormUzmanBilgisi();
                 frm.calisan = calisan;
@@ -66,9 +66,9 @@ namespace SISWin
 
             CalisanlariListele();
             lstCalisanlar.SelectedIndex = indeks;
-            
+
         }
 
-
+       
     }
 }
