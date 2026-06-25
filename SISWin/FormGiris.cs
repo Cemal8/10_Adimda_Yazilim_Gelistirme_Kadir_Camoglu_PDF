@@ -1,18 +1,21 @@
-using SISIsKatmani;
 using System;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Windows.Forms;
-using ISK = SISIsKatmani;
 
 namespace SISWin
 {
     public partial class FormGiris : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public FormGiris()
         {
             InitializeComponent();
         }
 
-        private void btnGir_Click(object sender, EventArgs e)
+        private async void btnGir_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtKullanici.Text))
             {
@@ -32,28 +35,55 @@ namespace SISWin
 
             int calisanNo = 0;
 
+            btnGir.Enabled = false;
+
             try
             {
-                calisanNo = ISK.Calisan.KullaniciGirisiniDogrula(txtKullanici.Text, txtParola.Text);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var loginVerisi = new
+                    {
+                        EPosta = txtKullanici.Text,
+                        Parola = txtParola.Text
+                    };
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/calisan/giris", loginVerisi);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        calisanNo = await response.Content.ReadFromJsonAsync<int>();
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        MessageBox.Show("Hatalı kullanıcı veya parola bilgisi!");
+                        txtKullanici.SelectAll();
+                        txtKullanici.Focus();
+                        return; 
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API Hatası: {response.StatusCode}");
+                        return;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Servise bağlanırken bir hata oluştu!\nDetay: " + ex.Message);
                 return;
+            }
+            finally
+            {
+                btnGir.Enabled = true;
             }
 
             if (calisanNo > 0)
             {
-                // Önce numarayı atıyoruz, sonra formu güvenle kapatıyoruz
                 Yardimci.KullaniciNo = calisanNo;
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Hatalı kullanıcı/parola bilgisi!");
-                txtKullanici.SelectAll();
-                txtKullanici.Focus();
+                this.Close(); 
             }
         }
     }

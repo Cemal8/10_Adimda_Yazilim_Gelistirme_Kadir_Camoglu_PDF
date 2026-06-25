@@ -1,51 +1,72 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
+
 namespace SISWin
 {
     public partial class FormParolaSifirla : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public FormParolaSifirla()
         {
             InitializeComponent();
         }
 
-        private void btnSifirla_Click(object sender, EventArgs e)
+        private async void btnSifirla_Click(object sender, EventArgs e)
         {
             bool dogruMu = KullanıcıGirdisiDogrula();
             if (!dogruMu) return;
 
+            btnSifirla.Enabled = false;
             bool sonuc = false;
+
             try
             {
-                sonuc = ISK.Calisan.ParolaSifirla(txtEPosta.Text.Trim(), txtParola.Text.Trim());
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
 
-                if (sonuc)
-                {
-                    MessageBox.Show("Parola başarıyla sıfırlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                }
-                else
-                {
-                    // Veritabanında şifre değiştiği halde false dönüyorsa, bu kesinlikle mail gönderilemediği içindir.
-                    // Kullanıcıya şifrenin değiştiği müjdesini veriyoruz:
-                    MessageBox.Show("Parolanız başarıyla sıfırlandı ve veritabanı güncellendi!\n\nNot: Sistem bilgilendirme e-postası gönderemedi (SMTP hatası), ancak yeni şifrenizle giriş yapabilirsiniz.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    this.Close();
+                    var requestData = new
+                    {
+                        EPosta = txtEPosta.Text.Trim(),
+                        Parola = txtParola.Text.Trim()
+                    };
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/calisan/parola-sifirla", requestData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<bool>();
+
+                        if (sonuc)
+                        {
+                            MessageBox.Show("Parola başarıyla sıfırlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Parolanız başarıyla sıfırlandı ve veritabanı güncellendi!\n\nNot: Sistem bilgilendirme e-postası gönderemedi (SMTP hatası), ancak yeni şifrenizle giriş yapabilirsiniz.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Close();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API İşlemi Başarısız Oldu. Statü Kodu: {response.StatusCode}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste genel bir hata oluştu!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Servise bağlanırken genel bir hata oluştu!\nDetay: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnSifirla.Enabled = true;
             }
         }
 

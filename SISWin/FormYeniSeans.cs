@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
-using SISVarliklar;
 
 namespace SISWin
 {
     public partial class FormYeniSeans : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public VAR.Calisan uzman;
         private const int enKisaSeansSuresi = 30;
 
@@ -34,7 +31,8 @@ namespace SISWin
                 dtpTarih.Focus();
                 return false;
             }
-            if (dtpBitisSaati.Value <= dtpTarih.Value.AddMinutes(enKisaSeansSuresi))
+
+            if (dtpBitisSaati.Value <= dtpBaslingicSaati.Value.AddMinutes(enKisaSeansSuresi))
             {
                 MessageBox.Show($"Seans süresi en az {enKisaSeansSuresi} dakika olmalıdır.");
                 dtpBitisSaati.Select();
@@ -44,9 +42,8 @@ namespace SISWin
             return true;
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
+        private async void btnKaydet_Click(object sender, EventArgs e)
         {
-            // ✅ null kontrolü eklendi (ekstra güvenlik için)
             if (uzman == null)
             {
                 MessageBox.Show("Uzman bilgisi bulunamadı!");
@@ -60,7 +57,7 @@ namespace SISWin
                 return;
             }
 
-            VAR.Seans seans = new SISVarliklar.Seans();
+            VAR.Seans seans = new VAR.Seans();
             seans.UzmanNo = uzman.No;
             seans.Tarih = dtpTarih.Value;
             seans.BaslangicSaati = dtpBaslingicSaati.Value.ToShortTimeString();
@@ -68,29 +65,48 @@ namespace SISWin
 
             int sonuc = 0;
 
-            // servis çağırılıyor
+            btnKaydet.Enabled = false;
+
             try
             {
-                sonuc = ISK.Seans.Kaydet(seans);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/seans/kaydet", seans);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<int>();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API Hatası: {response.StatusCode}");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Servise bağlanırken bir hata oluştu!\nDetay: " + ex.Message);
+            }
+            finally
+            {
+                btnKaydet.Enabled = true;
             }
 
             if (sonuc > 0)
             {
-                MessageBox.Show("Kayıt işlemi tamamlandı.");
-                this.Close();
+                MessageBox.Show("Kayıt işlemi başarıyla tamamlandı.");
+                this.Close(); 
             }
             else if (sonuc == -1)
             {
-                MessageBox.Show("Seans saatlerinde çakışma var!");
+                MessageBox.Show("Seans saatlerinde çakışma var! Lütfen başka bir saat dilimi seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                MessageBox.Show("İşlem hatalı!");
+                MessageBox.Show("İşlem hatalı veya gerçekleştirilemedi.");
             }
         }
 

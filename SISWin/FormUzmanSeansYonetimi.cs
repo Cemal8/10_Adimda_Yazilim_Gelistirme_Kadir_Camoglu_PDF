@@ -1,43 +1,119 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
+
 namespace SISWin
 {
     public partial class FormUzmanSeansYonetimi : Form
     {
-        public VAR.Calisan uzman = null;
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
 
+        public VAR.Calisan uzman = null;
         private VAR.Hasta hasta = null;
         private VAR.Seans aktifseans = null;
         private VAR.Seans gecmisSeans = null;
 
-        private void UzmanSeanslariniYukle()
+        public FormUzmanSeansYonetimi()
         {
-            VAR.Seans[] seanslar = null;
+            InitializeComponent();
+        }
+
+        private void EkranıTemizle()
+        {
+            hasta = null;
+            lblTCKimlikNo.Text = "";
+            lblAd.Text = "";
+            lblAdres.Text = "";
+            lblGsmNo.Text = "";
+            lblCinsiyet.Text = "";
+            lblDogumTarihi.Text = "";
+            lblEPosta.Text = "";
+            lblTelefon.Text = "";
+            lblSoyad.Text = "";
+            txtAktifSeansNotu.Text = "";
+            lstSeanslar.DataSource = null;
+        }
+
+        private async void FormUzmanSeansYonetimi_Load(object sender, EventArgs e)
+        {
+            EkranıTemizle();
 
             try
             {
-                seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    uzman = await client.GetFromJsonAsync<VAR.Calisan>($"api/calisan/{Yardimci.KullaniciNo}");
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Uzman bilgileri çekilirken serviste bir hata oluştu!");
+                return;
             }
 
-            cbbSeanslar.DataSource = seanslar;
-            cbbSeanslar.DisplayMember = "GoruntuMetni";
+            await UzmanSeanslariniYukleAsync();
         }
-        private void BilgileriYukle()
+
+        private async Task UzmanSeanslariniYukleAsync()
+        {
+            if (uzman == null) return;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var seanslar = await client.GetFromJsonAsync<VAR.Seans[]>($"api/seans/uzman/{uzman.No}");
+
+                    cbbSeanslar.DataSource = seanslar;
+                    cbbSeanslar.DisplayMember = "GoruntuMetni";
+                }
+            }
+            catch (Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Seanslar çekilirken serviste bir hata oluştu!");
+            }
+        }
+
+        private async void cbbSeanslar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EkranıTemizle();
+
+            if (cbbSeanslar.SelectedItem is VAR.Seans secilenSeans)
+            {
+                aktifseans = secilenSeans;
+
+                if (aktifseans.HastaNo > 0)
+                {
+                    try
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.BaseAddress = new Uri(apiUrl);
+                            hasta = await client.GetFromJsonAsync<VAR.Hasta>($"api/hasta/{aktifseans.HastaNo}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Yardimci.HataKaydet(ex);
+                        MessageBox.Show("Hasta bilgisi çekilirken serviste bir hata oluştu!");
+                    }
+                }
+
+                await BilgileriYukleAsync();
+            }
+        }
+
+        private async Task BilgileriYukleAsync()
         {
             if (hasta != null)
             {
@@ -51,101 +127,68 @@ namespace SISWin
                 lblSoyad.Text = hasta.Soyad;
                 lblTCKimlikNo.Text = hasta.TcKimlikNo;
 
-                txtAktifSeansNotu.Text = aktifseans.SeansNotu;
-
-                VAR.Seans[] hastaSeanslari = null;
+                txtAktifSeansNotu.Text = aktifseans?.SeansNotu ?? "";
 
                 try
                 {
-                    hastaSeanslari = ISK.Seans.HastaSeanslariniListele(hasta.No);
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(apiUrl);
+
+                        var hastaSeanslari = await client.GetFromJsonAsync<VAR.Seans[]>($"api/seans/hasta/{hasta.No}/seanslar");
+
+                        lstSeanslar.DataSource = hastaSeanslari;
+                        lstSeanslar.DisplayMember = "GoruntuMetni";
+                    }
                 }
                 catch (Exception ex)
                 {
                     Yardimci.HataKaydet(ex);
-                    MessageBox.Show("Serviste bir hata oluştu!");
+                    MessageBox.Show("Geçmiş seanslar çekilirken serviste bir hata oluştu!");
                 }
-
-                lstSeanslar.DataSource = hastaSeanslari;
-                lstSeanslar.DisplayMember = "GoruntuMetni";
             }
         }
-        private bool SeansNotuKaydet(int seansNo, string seansNotu)
+
+        private void lstSeanslar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstSeanslar.SelectedItem is VAR.Seans secilenGecmisSeans)
+            {
+                gecmisSeans = secilenGecmisSeans;
+                txtGecmisSeansNotu.Text = gecmisSeans.SeansNotu;
+            }
+        }
+
+        private async Task<bool> SeansNotuKaydetAsync(int seansNo, string seansNotu)
         {
             bool sonuc = false;
-
             try
             {
-                sonuc = ISK.Seans.NotGuncelle(seansNo, seansNotu);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var requestData = new { SeansNo = seansNo, SeansNotu = seansNotu };
+
+                    HttpResponseMessage response = await client.PutAsJsonAsync("api/seans/not-guncelle", requestData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<bool>();
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Not güncellenirken serviste bir hata oluştu!");
             }
-
             return sonuc;
         }
-        private void EkranıTemizle()
-        {
-            hasta = null;
-            lblTCKimlikNo.Text = "";
-            lblAd.Text = "";
-            lblAdres.Text = "";
-            lblGsmNo.Text = "";
-            lblCinsiyet.Text = "";
-            lblDogumTarihi.Text = "";
-            lblEPosta.Text = "";
-            lblTelefon.Text = "";
-            lblSoyad.Text = "";
-        }
-        public FormUzmanSeansYonetimi()
-        {
-            InitializeComponent();
-        }
-        private void FormUzmanSeansYonetimi_Load(object sender, EventArgs e)
-        {
-            EkranıTemizle();
 
-            try
-            {
-                uzman = ISK.Calisan.CalisanGetir(Yardimci.KullaniciNo);
-            }
-            catch (Exception ex)
-            {
-                Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
-            }
-
-            UzmanSeanslariniYukle();
-        }
-        private void cbbSeanslar_SelectedIndexChanged(object sender, EventArgs e)
+        private async void btnKaydet_Click(object sender, EventArgs e)
         {
-            EkranıTemizle();
+            if (aktifseans == null) return;
 
-            aktifseans = (VAR.Seans)cbbSeanslar.SelectedItem;
-
-            if (aktifseans.HastaNo > 0)
-            {
-                try
-                {
-                    hasta = ISK.Hasta.HastaGetir(aktifseans.HastaNo);
-                }
-                catch (Exception ex)
-                {
-                    Yardimci.HataKaydet(ex);
-                    MessageBox.Show("Serviste bir hata oluştu!");
-                }
-            }
-
-            BilgileriYukle();
-        }
-        private void txtGecmisSeansNotu_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void btnKaydet_Click(object sender, EventArgs e)
-        {
-            //  DOĞRU KONTROL: txtGecmisSeansNotu yerine txtAktifSeansNotu.Text kontrol edilmeli:
             if (string.IsNullOrEmpty(txtAktifSeansNotu.Text.Trim()))
             {
                 MessageBox.Show("Seans notu boş olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -153,7 +196,12 @@ namespace SISWin
                 return;
             }
 
-            bool sonuc = SeansNotuKaydet(aktifseans.No, txtAktifSeansNotu.Text);
+            btnKaydet.Enabled = false;
+
+            bool sonuc = await SeansNotuKaydetAsync(aktifseans.No, txtAktifSeansNotu.Text);
+
+            btnKaydet.Enabled = true;
+
             if (sonuc)
             {
                 MessageBox.Show("Seans notu başarıyla kaydedildi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -163,24 +211,42 @@ namespace SISWin
                 MessageBox.Show("Seans notu kaydedilemedi.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void btnGüncelle_Click(object sender, EventArgs e)
+
+        private async void btnGüncelle_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtGecmisSeansNotu.Text))
+            if (gecmisSeans == null)
+            {
+                MessageBox.Show("Lütfen güncellemek için geçmiş bir seans seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(txtGecmisSeansNotu.Text.Trim()))
             {
                 MessageBox.Show("Seans notu boş olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtGecmisSeansNotu.Focus();
                 return;
             }
-            bool sonuc = SeansNotuKaydet(gecmisSeans.No, txtGecmisSeansNotu.Text);
+
+            btnGüncelle.Enabled = false;
+
+            bool sonuc = await SeansNotuKaydetAsync(gecmisSeans.No, txtGecmisSeansNotu.Text);
+
+            btnGüncelle.Enabled = true;
+
             if (sonuc)
             {
                 MessageBox.Show("Seans notu başarıyla güncellendi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                await BilgileriYukleAsync();
             }
             else
             {
                 MessageBox.Show("Seans notu güncellenemedi.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void txtGecmisSeansNotu_TextChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }

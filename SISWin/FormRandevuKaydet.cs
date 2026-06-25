@@ -1,64 +1,88 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
-using SISIsKatmani;
+
 namespace SISWin
 {
     public partial class FormRandevuKaydet : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public VAR.Hasta hasta;
         private VAR.Calisan uzman;
         private VAR.Seans seans;
 
-        private void UzmanlariYukle()
+        public FormRandevuKaydet()
         {
-            VAR.Calisan[] calisanlar = null;
-            // servis çağırılıyor
-            try
-            {
-                calisanlar = ISK.Calisan.UzmanlariListele();
-            }
-            catch (Exception ex)
-            {
-                Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
-            }
-
-            cbbUzmanlar.DataSource = calisanlar;
-            cbbUzmanlar.DisplayMember = "GoruntuMetni";
+            InitializeComponent();
         }
 
-        private void UzmanSeanslariniYukle()
+        private async void FormRandevuKaydet_Load(object sender, EventArgs e)
         {
-            VAR.Seans[] seanslar = null;
+            if (hasta != null)
+            {
+                lblHasta.Text = hasta.GoruntuMetni;
+            }
+            else
+            {
+                lblHasta.Text = "Hasta Bilgisi Bulunamadı!";
+                btnKaydet.Enabled = false;
+            }
 
-            // servis çağırılıyor
+            await UzmanlariYukleAsync();
+        }
+
+        private async Task UzmanlariYukleAsync()
+        {
             try
             {
-                seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var uzmanlar = await client.GetFromJsonAsync<VAR.Calisan[]>("api/calisan/uzmanlar");
+
+                    cbbUzmanlar.DataSource = uzmanlar;
+                    cbbUzmanlar.DisplayMember = "GoruntuMetni";
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Uzman listesi çekilirken bir hata oluştu!\nDetay: " + ex.Message);
             }
+        }
 
-            cbbSeanslar.DataSource = seanslar;
-            cbbSeanslar.DisplayMember = "GoruntuMetni";
+        private async Task UzmanSeanslariniYukleAsync()
+        {
+            if (uzman == null) return;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var seanslar = await client.GetFromJsonAsync<VAR.Seans[]>($"api/seans/uzman/{uzman.No}");
+
+                    cbbSeanslar.DataSource = seanslar;
+                    cbbSeanslar.DisplayMember = "GoruntuMetni";
+                }
+            }
+            catch (Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Uzmanın seansları çekilirken bir hata oluştu!\nDetay: " + ex.Message);
+            }
         }
 
         private bool KullanıcıGirdisiDogrula()
         {
-            if(uzman==null)
+            if (uzman == null)
             {
                 MessageBox.Show("Lütfen bir uzman seçiniz.");
                 cbbUzmanlar.Focus();
@@ -74,17 +98,12 @@ namespace SISWin
             return true;
         }
 
-        public FormRandevuKaydet()
-        {
-            InitializeComponent();
-        }
-
-        private void cbbUzmanlar_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cbbUzmanlar_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbbUzmanlar.SelectedItem is VAR.Calisan secilenUzman)
             {
                 uzman = secilenUzman;
-                UzmanSeanslariniYukle();
+                await UzmanSeanslariniYukleAsync();
             }
         }
 
@@ -96,11 +115,11 @@ namespace SISWin
             }
             else
             {
-                seans = null; // Eğer seans seçili değilse null yap ki validasyon yakalasın
+                seans = null;
             }
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
+        private async void btnKaydet_Click(object sender, EventArgs e)
         {
             if (hasta == null)
             {
@@ -109,19 +128,43 @@ namespace SISWin
             }
 
             bool dogruMu = KullanıcıGirdisiDogrula();
-            bool sonuc = false;
-
             if (!dogruMu) return;
+
+            bool sonuc = false;
+            btnKaydet.Enabled = false;
 
             try
             {
-                seans.HastaNo = hasta.No;
-                sonuc = ISK.Seans.RandevuKaydet(seans.No, hasta.No);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var randevuVerisi = new
+                    {
+                        SeansNo = seans.No,
+                        HastaNo = hasta.No
+                    };
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/seans/randevu-kaydet", randevuVerisi);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<bool>();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API Hatası: {response.StatusCode}");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Servise bağlanırken bir hata oluştu!");
+            }
+            finally
+            {
+                btnKaydet.Enabled = true;
             }
 
             if (sonuc)
@@ -134,13 +177,5 @@ namespace SISWin
                 MessageBox.Show("İşlem gerçekleştirilemedi. Bu seans dolu olabilir veya bir hata oluştu.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        private void FormRandevuKaydet_Load(object sender, EventArgs e)
-        {
-            lblHasta.Text = hasta.GoruntuMetni;
-            UzmanlariYukle();
-        }
-
-
     }
 }

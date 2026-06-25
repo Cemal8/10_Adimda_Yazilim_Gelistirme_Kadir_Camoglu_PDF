@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
 
 namespace SISWin
 {
     public partial class FormSeansYonetimi : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public VAR.Calisan uzman;
 
         public FormSeansYonetimi()
@@ -21,73 +19,87 @@ namespace SISWin
             InitializeComponent();
         }
 
-        private void UzmanlariYukle()
+        private async Task UzmanlariYukleAsync()
         {
-            cbbUzmanlar.DataSource = ISK.Calisan.UzmanlariListele();
-            cbbUzmanlar.DisplayMember = "GoruntuMetni";
-        }
-
-        private void UzmanSeanslariniYukle()
-        {
-            VAR.Seans[] seanslar = null;
             try
             {
-                seanslar = ISK.Seans.UzmanSeanslariniListele(uzman.No);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var uzmanlar = await client.GetFromJsonAsync<VAR.Calisan[]>("api/calisan/uzmanlar");
+
+                    cbbUzmanlar.DataSource = uzmanlar;
+                    cbbUzmanlar.DisplayMember = "GoruntuMetni";
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Uzmanlar listelenirken serviste bir hata oluştu!\nDetay: " + ex.Message);
+            }
+        }
+
+        private async Task UzmanSeanslariniYukleAsync()
+        {
+            if (uzman == null) return;
+
+            VAR.Seans[] seanslar = null;
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    seanslar = await client.GetFromJsonAsync<VAR.Seans[]>($"api/seans/uzman/{uzman.No}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Yardimci.HataKaydet(ex);
+                MessageBox.Show("Seanslar listelenirken serviste bir hata oluştu!");
             }
 
             lstSeanslar.DataSource = seanslar;
             lstSeanslar.DisplayMember = "GoruntuMetni";
 
-            if (lstSeanslar.Items.Count > 0 && lstSeanslar.SelectedIndex > -1)
+            lnkSeansIptalEt.Enabled = (lstSeanslar.Items.Count > 0 && lstSeanslar.SelectedIndex > -1);
+        }
+
+        private async void FormSeansYonetimi_Load(object sender, EventArgs e)
+        {
+            await UzmanlariYukleAsync();
+        }
+
+        private async void cbbUzmanlar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbbUzmanlar.SelectedItem is VAR.Calisan secilenUzman)
             {
-                lnkSeansIptalEt.Enabled = true;
-            }
-            else
-            {
-                lnkSeansIptalEt.Enabled = false;
+                this.uzman = secilenUzman;
+                await UzmanSeanslariniYukleAsync();
             }
         }
 
-        private void UzmanlarıYukle()
-        {
-            UzmanlariYukle(); 
-        }
-
-        private void FormSeansYonetimi_Load(object sender, EventArgs e)
-        {
-            UzmanlarıYukle();
-        }
-
-        private void cbbUzmanlar_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.uzman = (VAR.Calisan)cbbUzmanlar.SelectedItem;
-            UzmanSeanslariniYukle();
-        }
-
-        private void lnkSeansEkle_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void lnkSeansEkle_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             FormYeniSeans frm = new FormYeniSeans(this.uzman);
             frm.ShowDialog();
 
-            UzmanSeanslariniYukle();
+            await UzmanSeanslariniYukleAsync();
         }
 
-        private void lnkSeansIptalEt_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private async void lnkSeansIptalEt_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            VAR.Seans seans = (VAR.Seans)lstSeanslar.SelectedItem;
+            if (lstSeanslar.SelectedItem is VAR.Seans secilenSeans)
+            {
+                FormSeansIptalEt frm = new FormSeansIptalEt();
+                frm.seans = secilenSeans;
+                frm.uzmanAdi = cbbUzmanlar.Text;
+                frm.ShowDialog();
 
-            FormSeansIptalEt frm = new FormSeansIptalEt();
-            frm.seans = seans;
-            
-            frm.uzmanAdi = cbbUzmanlar.Text;
-            frm.ShowDialog();
-
-            UzmanSeanslariniYukle();
+                await UzmanSeanslariniYukleAsync();
+            }
         }
     }
 }

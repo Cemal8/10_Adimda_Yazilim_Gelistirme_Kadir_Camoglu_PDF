@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
+// ISK (İş Katmanı) referansını tamamen sildik, çünkü artık API ile haberleşeceğiz.
 using VAR = SISVarliklar;
+
 namespace SISWin
 {
     public partial class FormHastaBilgisi : Form
     {
+        // API adresi
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public VAR.Hasta hasta;
+
         public FormHastaBilgisi()
         {
             InitializeComponent();
@@ -22,7 +21,6 @@ namespace SISWin
 
         private void FormHastaBilgisi_Load(object sender, EventArgs e)
         {
-            //
             dtpDogumTarihi.Value = DateTime.Now;
             cbbCinsiyet.SelectedIndex = 0;
 
@@ -32,7 +30,7 @@ namespace SISWin
             }
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
+        private async void btnKaydet_Click(object sender, EventArgs e)
         {
             bool dogruMu = KullanıcıGirdisiDogrula();
 
@@ -41,10 +39,9 @@ namespace SISWin
                 return;
             }
 
-            // yeni kayıtsa, yeni bir calisan nesnesi olusturuluyor.
             if (hasta == null)
             {
-                hasta = new SISVarliklar.Hasta();
+                hasta = new VAR.Hasta();
             }
 
             hasta.Ad = txtAd.Text;
@@ -59,15 +56,34 @@ namespace SISWin
 
             int sonuc = 0;
 
-            // servis çağırılıyor
+            btnKaydet.Enabled = false;
+
             try
             {
-                sonuc = ISK.Hasta.Kaydet(hasta);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/hasta/kaydet", hasta);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<int>();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API İşlemi Başarısız Oldu. Hata Kodu: {response.StatusCode}");
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                Yardimci.HataKaydet(ex); 
+                MessageBox.Show("Servise bağlanırken bir hata oluştu!\nDetay: " + ex.Message);
+            }
+            finally
+            {
+                btnKaydet.Enabled = true;
             }
 
             if (sonuc > 0)
@@ -77,7 +93,7 @@ namespace SISWin
             }
             else
             {
-                MessageBox.Show("İşlem hatalı");
+                MessageBox.Show("İşlem hatalı veya kayıt gerçekleşemedi.");
             }
         }
 
@@ -91,7 +107,6 @@ namespace SISWin
             txtTelefon.Text = hasta.EvTel;
             dtpDogumTarihi.Value = hasta.DogumTarihi;
             cbbCinsiyet.SelectedItem = hasta.Cinsiyet;
-
         }
 
         private bool KullanıcıGirdisiDogrula()
@@ -101,7 +116,7 @@ namespace SISWin
                 MessageBox.Show("Ad alanı boş geçilemez.");
                 txtAd.Select();
                 txtAd.Focus();
-                return false; 
+                return false;
             }
             if (txtSoyad.Text == String.Empty)
             {
@@ -140,7 +155,5 @@ namespace SISWin
             }
             return true;
         }
-
-   
     }
 }

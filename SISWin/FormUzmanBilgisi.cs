@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
+// Eski ISK referanslarını tamamen sildik, sadece varlıkları (modelleri) kullanıyoruz
 using VAR = SISVarliklar;
-using SISIsKatmani;
+
 namespace SISWin
 {
     public partial class FormUzmanBilgisi : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public VAR.Calisan calisan;
 
         public FormUzmanBilgisi()
@@ -30,6 +28,10 @@ namespace SISWin
             txtGsmNo.Text = calisan.CepTel;
             txtKimlikNo.Text = calisan.TcKimlikNo;
             txtTelefon.Text = calisan.EvTel;
+
+            // PDF'teki resimde olan ancak koda eklemeyi unuttuğun Ünvan alanı:
+            // (Eğer tasarımda txtUnvan adlı TextBox'ın yoksa bu satırı yoruma alabilirsin)
+            // txtUnvan.Text = calisan.Unvan; 
         }
 
         private bool KullanıcıGirdisiDogrula()
@@ -37,26 +39,31 @@ namespace SISWin
             if (txtAd.Text == String.Empty)
             {
                 MessageBox.Show("Ad alanı boş geçilemez.");
+                txtAd.Focus();
                 return false;
             }
             if (txtSoyad.Text == String.Empty)
             {
                 MessageBox.Show("Soyad alanı boş geçilemez.");
+                txtSoyad.Focus();
                 return false;
             }
             if (txtEPosta.Text == String.Empty)
             {
                 MessageBox.Show("Eposta alanı boş geçilemez.");
+                txtEPosta.Focus();
                 return false;
             }
             if (txtGsmNo.Text == String.Empty)
             {
                 MessageBox.Show("Gsm No alanı boş geçilemez.");
+                txtGsmNo.Focus();
                 return false;
             }
             if (txtKimlikNo.Text == String.Empty)
             {
                 MessageBox.Show("Kimlik No alanı boş geçilemez.");
+                txtKimlikNo.Focus();
                 return false;
             }
             return true;
@@ -70,7 +77,8 @@ namespace SISWin
             }
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
+        // Metodumuzu async yaptık
+        private async void btnKaydet_Click(object sender, EventArgs e)
         {
             bool dogruMu = KullanıcıGirdisiDogrula();
 
@@ -81,39 +89,61 @@ namespace SISWin
 
             if (calisan == null)
             {
-                calisan = new SISVarliklar.Calisan();
+                calisan = new VAR.Calisan();
             }
 
             calisan.Ad = txtAd.Text;
             calisan.Soyad = txtSoyad.Text;
             calisan.TcKimlikNo = txtKimlikNo.Text;
-            calisan.CalisanTipi = VAR.CalisanTipleri.Sekreter;
+
+            calisan.CalisanTipi = VAR.CalisanTipleri.Uzman;
+
             calisan.CepTel = txtGsmNo.Text;
             calisan.Eposta = txtEPosta.Text;
             calisan.EvTel = txtTelefon.Text;
 
+
             int sonuc = 0;
+
+            btnKaydet.Enabled = false;
 
             try
             {
-                sonuc = ISK.Calisan.Kaydet(calisan);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/calisan/kaydet", calisan);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<int>();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API Hatası: {response.StatusCode}");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu");
+                MessageBox.Show("Servise bağlanırken bir hata oluştu!\nDetay: " + ex.Message);
+            }
+            finally
+            {
+                btnKaydet.Enabled = true;
             }
 
             if (sonuc > 0)
             {
-                MessageBox.Show("Kayıt işlemi tamamlandı");
+                MessageBox.Show("Kayıt işlemi başarıyla tamamlandı.");
                 this.Close();
             }
             else
             {
-                MessageBox.Show("İşlem hatalı");
+                MessageBox.Show("İşlem hatalı veya gerçekleştirilemedi.");
             }
-
         }
     }
 }

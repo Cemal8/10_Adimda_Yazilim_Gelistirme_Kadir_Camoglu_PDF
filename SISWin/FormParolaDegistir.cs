@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
+
 namespace SISWin
 {
     public partial class FormParolaDegistir : Form
     {
-        public SISVarliklar.Calisan calisan;
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
+        public VAR.Calisan calisan;
+
         public FormParolaDegistir()
         {
             InitializeComponent();
         }
+
         private bool KullanıcıGirdisiDogrula()
         {
             if (txtEski.Text == String.Empty)
@@ -46,8 +46,7 @@ namespace SISWin
             return true;
         }
 
-
-        private void btnDegistir_Click(object sender, EventArgs e)
+        private async void btnDegistir_Click(object sender, EventArgs e)
         {
             bool dogruMu = KullanıcıGirdisiDogrula();
             if (!dogruMu)
@@ -55,16 +54,41 @@ namespace SISWin
                 return;
             }
 
-
+            btnDegistir.Enabled = false;
             bool sonuc = false;
+
             try
             {
-                sonuc = ISK.Calisan.ParolaDegistir(calisan.No, txtYeni.Text);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var requestData = new
+                    {
+                        CalisanNo = calisan.No,
+                        YeniParola = txtYeni.Text
+                    };
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/calisan/parola-degistir", requestData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sonuc = await response.Content.ReadFromJsonAsync<bool>();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"API İşlemi Başarısız Oldu. Statü Kodu: {response.StatusCode}");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
+                MessageBox.Show("Servise bağlanırken bir hata oluştu!\nDetay: " + ex.Message);
+            }
+            finally
+            {
+                btnDegistir.Enabled = true;
             }
 
             if (sonuc)
@@ -74,7 +98,7 @@ namespace SISWin
             }
             else
             {
-                MessageBox.Show("Parola güncellendi ancak bir hata oluştu (E-posta gönderilememiş veya servis hatası olabilir). Lütfen giriş yapmayı deneyin.");
+                MessageBox.Show("Parola değiştirilemedi. Lütfen tekrar deneyin.");
             }
         }
     }

@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
+
 namespace SISWin
 {
     public partial class FormCalisanAra : Form
     {
+        // API Adresimiz
+        private readonly string apiUrl = "https://localhost:7003/";
+
         public VAR.Calisan calisan;
 
         public FormCalisanAra()
@@ -21,54 +19,67 @@ namespace SISWin
             InitializeComponent();
         }
 
-        private void CalisanlariListele()
+        private async Task CalisanlariListeleAsync()
         {
-            VAR.Calisan[] calisanlar = null;
             lstCalisanlar.DisplayMember = "GoruntuMetni";
-            // servis çağırılıyor
+            lstCalisanlar.DataSource = null; 
+
+            string ad = txtAd.Text.Trim();
+            string soyad = txtSoyad.Text.Trim();
+
+            string requestUrl = $"api/calisan/listele?ad={ad}&soyad={soyad}";
+
             try
             {
-                calisanlar = ISK.Calisan.CalisanlariListele(txtAd.Text, txtSoyad.Text);
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiUrl);
+
+                    var calisanlar = await client.GetFromJsonAsync<VAR.Calisan[]>(requestUrl);
+
+                    lstCalisanlar.DataSource = calisanlar;
+                }
             }
             catch (Exception ex)
             {
                 Yardimci.HataKaydet(ex);
-                MessageBox.Show("Serviste bir hata oluştu!");
-            }
-            finally
-            {
-                lstCalisanlar.DataSource = calisanlar;
+                MessageBox.Show("Servisten veri çekilirken bir hata oluştu!\nDetay: " + ex.Message);
             }
         }
 
-        private void btnAra_Click_1(object sender, EventArgs e)
+        private async void btnAra_Click_1(object sender, EventArgs e)
         {
-            CalisanlariListele();
+            btnAra.Enabled = false;
+            await CalisanlariListeleAsync();
+            btnAra.Enabled = true;
         }
 
-        private void lstCalisanlar_DoubleClick(object sender, EventArgs e)
+        private async void lstCalisanlar_DoubleClick(object sender, EventArgs e)
         {
+            if (lstCalisanlar.SelectedItem == null) return;
+
             int indeks = lstCalisanlar.SelectedIndex;
-            VAR.Calisan calisan = (VAR.Calisan)lstCalisanlar.SelectedItem;
+            VAR.Calisan secilenCalisan = (VAR.Calisan)lstCalisanlar.SelectedItem;
 
-            if (calisan.CalisanTipi == VAR.CalisanTipleri.Sekreter)
+            if (secilenCalisan.CalisanTipi == VAR.CalisanTipleri.Sekreter)
             {
                 FormSekreterBilgisi frm = new FormSekreterBilgisi();
-                frm.calisan = calisan;
+                frm.calisan = secilenCalisan;
                 frm.ShowDialog();
             }
-            else if (calisan.CalisanTipi == VAR.CalisanTipleri.Uzman)
+            else if (secilenCalisan.CalisanTipi == VAR.CalisanTipleri.Uzman)
             {
                 FormUzmanBilgisi frm = new FormUzmanBilgisi();
-                frm.calisan = calisan;
+                frm.calisan = secilenCalisan;
                 frm.ShowDialog();
             }
 
-            CalisanlariListele();
-            lstCalisanlar.SelectedIndex = indeks;
+            await CalisanlariListeleAsync();
 
+            if (lstCalisanlar.Items.Count > 0 && indeks < lstCalisanlar.Items.Count)
+            {
+                lstCalisanlar.SelectedIndex = indeks;
+            }
         }
-
-       
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using ISK = SISIsKatmani;
 using VAR = SISVarliklar;
 
 namespace SISWin
